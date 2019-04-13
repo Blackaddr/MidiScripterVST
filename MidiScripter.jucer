@@ -28,9 +28,6 @@
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
             toolset="">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
-                       debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
-                       linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="MidiScripter"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="MidiScripter"/>
