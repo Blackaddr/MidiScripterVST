@@ -1,0 +1,1404 @@
+/*
+  ==============================================================================
+
+  This is an automatically generated GUI class created by the Projucer!
+
+  Be careful when adding custom code to these files, as only the code within
+  the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
+  and re-saved.
+
+  Created with Projucer version: 5.2.0
+
+  ------------------------------------------------------------------------------
+
+  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
+  Copyright (c) 2015 - ROLI Ltd.
+
+  ==============================================================================
+*/
+
+//[Headers] You can add your own extra header files here...
+//[/Headers]
+
+#include "PluginEditor.h"
+
+
+//[MiscUserDefs] You can add your own user definitions and misc code here...
+//[/MiscUserDefs]
+
+//==============================================================================
+ScripterProcessorEditor::ScripterProcessorEditor (AudioProcessor& ownerFilter, int *midiStorage)
+    : AudioProcessorEditor(ownerFilter)
+{
+    //[Constructor_pre] You can add your own custom stuff here..
+    m_midiStorage = midiStorage;
+    //[/Constructor_pre]
+
+    addAndMakeVisible (label2 = new Label ("new label",
+                                           TRANS("Input Event")));
+    label2->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label2->setJustificationType (Justification::centredLeft);
+    label2->setEditable (false, false, false);
+    label2->setColour (TextEditor::textColourId, Colours::black);
+    label2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label3 = new Label ("new label",
+                                           TRANS("Ch.")));
+    label3->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label3->setJustificationType (Justification::centredLeft);
+    label3->setEditable (false, false, false);
+    label3->setColour (TextEditor::textColourId, Colours::black);
+    label3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label4 = new Label ("new label",
+                                           TRANS("CC\n")));
+    label4->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label4->setJustificationType (Justification::centredLeft);
+    label4->setEditable (false, false, false);
+    label4->setColour (TextEditor::textColourId, Colours::black);
+    label4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label5 = new Label ("new label",
+                                           TRANS("Val")));
+    label5->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label5->setJustificationType (Justification::centredLeft);
+    label5->setEditable (false, false, false);
+    label5->setColour (TextEditor::textColourId, Colours::black);
+    label5->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (triggerCh = new Label ("new label",
+                                              TRANS("0\n")));
+    triggerCh->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    triggerCh->setJustificationType (Justification::centred);
+    triggerCh->setEditable (true, true, false);
+    triggerCh->setColour (TextEditor::textColourId, Colours::black);
+    triggerCh->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    triggerCh->addListener (this);
+
+    addAndMakeVisible (triggerCC = new Label ("new label",
+                                              TRANS("0\n")));
+    triggerCC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    triggerCC->setJustificationType (Justification::centred);
+    triggerCC->setEditable (true, true, false);
+    triggerCC->setColour (TextEditor::textColourId, Colours::black);
+    triggerCC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    triggerCC->addListener (this);
+
+    addAndMakeVisible (triggerVal = new Label ("new label",
+                                               TRANS("0\n")));
+    triggerVal->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    triggerVal->setJustificationType (Justification::centred);
+    triggerVal->setEditable (true, true, false);
+    triggerVal->setColour (TextEditor::textColourId, Colours::black);
+    triggerVal->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    triggerVal->addListener (this);
+
+    addAndMakeVisible (label9 = new Label ("new label",
+                                           TRANS("Output Events")));
+    label9->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label9->setJustificationType (Justification::centredLeft);
+    label9->setEditable (false, false, false);
+    label9->setColour (TextEditor::textColourId, Colours::black);
+    label9->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label10 = new Label ("new label",
+                                            TRANS("Seq")));
+    label10->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label10->setJustificationType (Justification::centredLeft);
+    label10->setEditable (false, false, false);
+    label10->setColour (TextEditor::textColourId, Colours::black);
+    label10->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (sequenceSelectorBox = new ComboBox ("new combo box"));
+    sequenceSelectorBox->setEditableText (false);
+    sequenceSelectorBox->setJustificationType (Justification::centredLeft);
+    sequenceSelectorBox->setTextWhenNothingSelected (String());
+    sequenceSelectorBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    sequenceSelectorBox->addListener (this);
+
+    addAndMakeVisible (outputEvent0Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent0Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent0Ch->setJustificationType (Justification::centred);
+    outputEvent0Ch->setEditable (true, true, false);
+    outputEvent0Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent0Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent0Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent0CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent0CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent0CC->setJustificationType (Justification::centred);
+    outputEvent0CC->setEditable (true, true, false);
+    outputEvent0CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent0CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent0CC->addListener (this);
+
+    addAndMakeVisible (outputEvent0Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent0Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent0Val->setJustificationType (Justification::centred);
+    outputEvent0Val->setEditable (true, true, false);
+    outputEvent0Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent0Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent0Val->addListener (this);
+
+    addAndMakeVisible (label6 = new Label ("new label",
+                                           TRANS("#1")));
+    label6->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label6->setJustificationType (Justification::centredLeft);
+    label6->setEditable (false, false, false);
+    label6->setColour (TextEditor::textColourId, Colours::black);
+    label6->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (outputEvent1Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent1Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent1Ch->setJustificationType (Justification::centred);
+    outputEvent1Ch->setEditable (true, true, false);
+    outputEvent1Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent1Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent1Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent1CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent1CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent1CC->setJustificationType (Justification::centred);
+    outputEvent1CC->setEditable (true, true, false);
+    outputEvent1CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent1CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent1CC->addListener (this);
+
+    addAndMakeVisible (outputEvent1Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent1Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent1Val->setJustificationType (Justification::centred);
+    outputEvent1Val->setEditable (true, true, false);
+    outputEvent1Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent1Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent1Val->addListener (this);
+
+    addAndMakeVisible (label7 = new Label ("new label",
+                                           TRANS("#2")));
+    label7->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label7->setJustificationType (Justification::centredLeft);
+    label7->setEditable (false, false, false);
+    label7->setColour (TextEditor::textColourId, Colours::black);
+    label7->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (textEditor = new TextEditor ("new text editor"));
+    textEditor->setMultiLine (true);
+    textEditor->setReturnKeyStartsNewLine (true);
+    textEditor->setReadOnly (false);
+    textEditor->setScrollbarsShown (true);
+    textEditor->setCaretVisible (true);
+    textEditor->setPopupMenuEnabled (true);
+    textEditor->setText (String());
+
+    addAndMakeVisible (addSequence = new TextButton ("add sequence"));
+    addSequence->setButtonText (TRANS("NEW"));
+    addSequence->addListener (this);
+    addSequence->setColour (TextButton::buttonColourId, Colours::aqua);
+    addSequence->setColour (TextButton::textColourOffId, Colours::black);
+
+    addAndMakeVisible (outputEvent2Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent2Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent2Ch->setJustificationType (Justification::centred);
+    outputEvent2Ch->setEditable (true, true, false);
+    outputEvent2Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent2Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent2Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent2CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent2CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent2CC->setJustificationType (Justification::centred);
+    outputEvent2CC->setEditable (true, true, false);
+    outputEvent2CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent2CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent2CC->addListener (this);
+
+    addAndMakeVisible (outputEvent2Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent2Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent2Val->setJustificationType (Justification::centred);
+    outputEvent2Val->setEditable (true, true, false);
+    outputEvent2Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent2Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent2Val->addListener (this);
+
+    addAndMakeVisible (label8 = new Label ("new label",
+                                           TRANS("#3")));
+    label8->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label8->setJustificationType (Justification::centredLeft);
+    label8->setEditable (false, false, false);
+    label8->setColour (TextEditor::textColourId, Colours::black);
+    label8->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (outputEvent3Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent3Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent3Ch->setJustificationType (Justification::centred);
+    outputEvent3Ch->setEditable (true, true, false);
+    outputEvent3Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent3Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent3Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent3CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent3CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent3CC->setJustificationType (Justification::centred);
+    outputEvent3CC->setEditable (true, true, false);
+    outputEvent3CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent3CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent3CC->addListener (this);
+
+    addAndMakeVisible (outputEvent3Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent3Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent3Val->setJustificationType (Justification::centred);
+    outputEvent3Val->setEditable (true, true, false);
+    outputEvent3Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent3Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent3Val->addListener (this);
+
+    addAndMakeVisible (label11 = new Label ("new label",
+                                            TRANS("#4")));
+    label11->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label11->setJustificationType (Justification::centredLeft);
+    label11->setEditable (false, false, false);
+    label11->setColour (TextEditor::textColourId, Colours::black);
+    label11->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (outputEvent4Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent4Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent4Ch->setJustificationType (Justification::centred);
+    outputEvent4Ch->setEditable (true, true, false);
+    outputEvent4Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent4Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent4Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent4CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent4CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent4CC->setJustificationType (Justification::centred);
+    outputEvent4CC->setEditable (true, true, false);
+    outputEvent4CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent4CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent4CC->addListener (this);
+
+    addAndMakeVisible (outputEvent4Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent4Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent4Val->setJustificationType (Justification::centred);
+    outputEvent4Val->setEditable (true, true, false);
+    outputEvent4Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent4Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent4Val->addListener (this);
+
+    addAndMakeVisible (label12 = new Label ("new label",
+                                            TRANS("#5")));
+    label12->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label12->setJustificationType (Justification::centredLeft);
+    label12->setEditable (false, false, false);
+    label12->setColour (TextEditor::textColourId, Colours::black);
+    label12->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (outputEvent5Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent5Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent5Ch->setJustificationType (Justification::centred);
+    outputEvent5Ch->setEditable (true, true, false);
+    outputEvent5Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent5Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent5Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent5CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent5CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent5CC->setJustificationType (Justification::centred);
+    outputEvent5CC->setEditable (true, true, false);
+    outputEvent5CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent5CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent5CC->addListener (this);
+
+    addAndMakeVisible (outputEvent5Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent5Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent5Val->setJustificationType (Justification::centred);
+    outputEvent5Val->setEditable (true, true, false);
+    outputEvent5Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent5Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent5Val->addListener (this);
+
+    addAndMakeVisible (label13 = new Label ("new label",
+                                            TRANS("#6")));
+    label13->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label13->setJustificationType (Justification::centredLeft);
+    label13->setEditable (false, false, false);
+    label13->setColour (TextEditor::textColourId, Colours::black);
+    label13->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (outputEvent6Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent6Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent6Ch->setJustificationType (Justification::centred);
+    outputEvent6Ch->setEditable (true, true, false);
+    outputEvent6Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent6Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent6Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent6CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent6CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent6CC->setJustificationType (Justification::centred);
+    outputEvent6CC->setEditable (true, true, false);
+    outputEvent6CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent6CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent6CC->addListener (this);
+
+    addAndMakeVisible (outputEvent6Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent6Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent6Val->setJustificationType (Justification::centred);
+    outputEvent6Val->setEditable (true, true, false);
+    outputEvent6Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent6Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent6Val->addListener (this);
+
+    addAndMakeVisible (label14 = new Label ("new label",
+                                            TRANS("#7")));
+    label14->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label14->setJustificationType (Justification::centredLeft);
+    label14->setEditable (false, false, false);
+    label14->setColour (TextEditor::textColourId, Colours::black);
+    label14->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (outputEvent7Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent7Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent7Ch->setJustificationType (Justification::centred);
+    outputEvent7Ch->setEditable (true, true, false);
+    outputEvent7Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent7Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent7Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent7CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent7CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent7CC->setJustificationType (Justification::centred);
+    outputEvent7CC->setEditable (true, true, false);
+    outputEvent7CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent7CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent7CC->addListener (this);
+
+    addAndMakeVisible (outputEvent7Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent7Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent7Val->setJustificationType (Justification::centred);
+    outputEvent7Val->setEditable (true, true, false);
+    outputEvent7Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent7Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent7Val->addListener (this);
+
+    addAndMakeVisible (label15 = new Label ("new label",
+                                            TRANS("#8")));
+    label15->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label15->setJustificationType (Justification::centredLeft);
+    label15->setEditable (false, false, false);
+    label15->setColour (TextEditor::textColourId, Colours::black);
+    label15->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (outputEvent8Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent8Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent8Ch->setJustificationType (Justification::centred);
+    outputEvent8Ch->setEditable (true, true, false);
+    outputEvent8Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent8Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent8Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent8CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent8CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent8CC->setJustificationType (Justification::centred);
+    outputEvent8CC->setEditable (true, true, false);
+    outputEvent8CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent8CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent8CC->addListener (this);
+
+    addAndMakeVisible (outputEvent8Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent8Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent8Val->setJustificationType (Justification::centred);
+    outputEvent8Val->setEditable (true, true, false);
+    outputEvent8Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent8Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent8Val->addListener (this);
+
+    addAndMakeVisible (label16 = new Label ("new label",
+                                            TRANS("#9")));
+    label16->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label16->setJustificationType (Justification::centredLeft);
+    label16->setEditable (false, false, false);
+    label16->setColour (TextEditor::textColourId, Colours::black);
+    label16->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (outputEvent9Ch = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent9Ch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent9Ch->setJustificationType (Justification::centred);
+    outputEvent9Ch->setEditable (true, true, false);
+    outputEvent9Ch->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent9Ch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent9Ch->addListener (this);
+
+    addAndMakeVisible (outputEvent9CC = new Label ("new label",
+                                                   TRANS("0\n")));
+    outputEvent9CC->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent9CC->setJustificationType (Justification::centred);
+    outputEvent9CC->setEditable (true, true, false);
+    outputEvent9CC->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent9CC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent9CC->addListener (this);
+
+    addAndMakeVisible (outputEvent9Val = new Label ("new label",
+                                                    TRANS("0\n")));
+    outputEvent9Val->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    outputEvent9Val->setJustificationType (Justification::centred);
+    outputEvent9Val->setEditable (true, true, false);
+    outputEvent9Val->setColour (TextEditor::textColourId, Colours::black);
+    outputEvent9Val->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outputEvent9Val->addListener (this);
+
+    addAndMakeVisible (label17 = new Label ("new label",
+                                            TRANS("#10")));
+    label17->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label17->setJustificationType (Justification::centredLeft);
+    label17->setEditable (false, false, false);
+    label17->setColour (TextEditor::textColourId, Colours::black);
+    label17->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (deleteSequence = new TextButton ("delete sequence"));
+    deleteSequence->setButtonText (TRANS("DELETE"));
+    deleteSequence->addListener (this);
+    deleteSequence->setColour (TextButton::buttonColourId, Colours::red);
+    deleteSequence->setColour (TextButton::textColourOffId, Colours::black);
+
+
+    //[UserPreSize]
+    //[/UserPreSize]
+
+    setSize (600, 400);
+
+
+    //[Constructor] You can add your own custom stuff here..
+    loadFromStorage();
+    setSelectedSequence(0);
+    updateGui();
+    //[/Constructor]
+}
+
+ScripterProcessorEditor::~ScripterProcessorEditor()
+{
+    //[Destructor_pre]. You can add your own custom destruction code here..
+    //[/Destructor_pre]
+
+    label2 = nullptr;
+    label3 = nullptr;
+    label4 = nullptr;
+    label5 = nullptr;
+    triggerCh = nullptr;
+    triggerCC = nullptr;
+    triggerVal = nullptr;
+    label9 = nullptr;
+    label10 = nullptr;
+    sequenceSelectorBox = nullptr;
+    outputEvent0Ch = nullptr;
+    outputEvent0CC = nullptr;
+    outputEvent0Val = nullptr;
+    label6 = nullptr;
+    outputEvent1Ch = nullptr;
+    outputEvent1CC = nullptr;
+    outputEvent1Val = nullptr;
+    label7 = nullptr;
+    textEditor = nullptr;
+    addSequence = nullptr;
+    outputEvent2Ch = nullptr;
+    outputEvent2CC = nullptr;
+    outputEvent2Val = nullptr;
+    label8 = nullptr;
+    outputEvent3Ch = nullptr;
+    outputEvent3CC = nullptr;
+    outputEvent3Val = nullptr;
+    label11 = nullptr;
+    outputEvent4Ch = nullptr;
+    outputEvent4CC = nullptr;
+    outputEvent4Val = nullptr;
+    label12 = nullptr;
+    outputEvent5Ch = nullptr;
+    outputEvent5CC = nullptr;
+    outputEvent5Val = nullptr;
+    label13 = nullptr;
+    outputEvent6Ch = nullptr;
+    outputEvent6CC = nullptr;
+    outputEvent6Val = nullptr;
+    label14 = nullptr;
+    outputEvent7Ch = nullptr;
+    outputEvent7CC = nullptr;
+    outputEvent7Val = nullptr;
+    label15 = nullptr;
+    outputEvent8Ch = nullptr;
+    outputEvent8CC = nullptr;
+    outputEvent8Val = nullptr;
+    label16 = nullptr;
+    outputEvent9Ch = nullptr;
+    outputEvent9CC = nullptr;
+    outputEvent9Val = nullptr;
+    label17 = nullptr;
+    deleteSequence = nullptr;
+
+
+    //[Destructor]. You can add your own custom destruction code here..
+    //[/Destructor]
+}
+
+//==============================================================================
+void ScripterProcessorEditor::paint (Graphics& g)
+{
+    //[UserPrePaint] Add your own custom painting code here..
+    //[/UserPrePaint]
+
+    g.fillAll (Colour (0xff323e44));
+
+    {
+        int x = 28, y = 20, width = 200, height = 30;
+        String text (TRANS("Blackaddr Audio MidiScripter"));
+        Colour fillColour = Colours::aqua;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    //[UserPaint] Add your own custom painting code here..
+    //[/UserPaint]
+}
+
+void ScripterProcessorEditor::resized()
+{
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
+    label2->setBounds (99, 62, 88, 32);
+    label3->setBounds (88, 88, 32, 24);
+    label4->setBounds (128, 88, 32, 24);
+    label5->setBounds (168, 88, 32, 24);
+    triggerCh->setBounds (88, 112, 32, 24);
+    triggerCC->setBounds (128, 112, 32, 24);
+    triggerVal->setBounds (168, 112, 32, 24);
+    label9->setBounds (209, 61, 103, 32);
+    label10->setBounds (22, 72, 34, 32);
+    sequenceSelectorBox->setBounds (20, 112, 68, 48);
+    outputEvent0Ch->setBounds (216, 112, 32, 24);
+    outputEvent0CC->setBounds (216, 141, 32, 24);
+    outputEvent0Val->setBounds (216, 171, 32, 24);
+    label6->setBounds (216, 88, 32, 24);
+    outputEvent1Ch->setBounds (250, 111, 32, 24);
+    outputEvent1CC->setBounds (250, 140, 32, 24);
+    outputEvent1Val->setBounds (250, 170, 32, 24);
+    label7->setBounds (250, 87, 32, 24);
+    textEditor->setBounds (24, 224, 424, 152);
+    addSequence->setBounds (24, 176, 64, 24);
+    outputEvent2Ch->setBounds (283, 111, 32, 24);
+    outputEvent2CC->setBounds (283, 140, 32, 24);
+    outputEvent2Val->setBounds (283, 170, 32, 24);
+    label8->setBounds (283, 87, 32, 24);
+    outputEvent3Ch->setBounds (316, 110, 32, 24);
+    outputEvent3CC->setBounds (316, 139, 32, 24);
+    outputEvent3Val->setBounds (316, 169, 32, 24);
+    label11->setBounds (316, 86, 32, 24);
+    outputEvent4Ch->setBounds (349, 110, 32, 24);
+    outputEvent4CC->setBounds (349, 139, 32, 24);
+    outputEvent4Val->setBounds (349, 169, 32, 24);
+    label12->setBounds (349, 86, 32, 24);
+    outputEvent5Ch->setBounds (379, 109, 32, 24);
+    outputEvent5CC->setBounds (379, 138, 32, 24);
+    outputEvent5Val->setBounds (379, 168, 32, 24);
+    label13->setBounds (379, 85, 32, 24);
+    outputEvent6Ch->setBounds (412, 109, 32, 24);
+    outputEvent6CC->setBounds (412, 138, 32, 24);
+    outputEvent6Val->setBounds (412, 168, 32, 24);
+    label14->setBounds (412, 85, 32, 24);
+    outputEvent7Ch->setBounds (447, 108, 32, 24);
+    outputEvent7CC->setBounds (447, 137, 32, 24);
+    outputEvent7Val->setBounds (447, 167, 32, 24);
+    label15->setBounds (447, 84, 32, 24);
+    outputEvent8Ch->setBounds (479, 108, 32, 24);
+    outputEvent8CC->setBounds (479, 137, 32, 24);
+    outputEvent8Val->setBounds (479, 167, 32, 24);
+    label16->setBounds (479, 84, 32, 24);
+    outputEvent9Ch->setBounds (510, 108, 32, 24);
+    outputEvent9CC->setBounds (510, 137, 32, 24);
+    outputEvent9Val->setBounds (510, 167, 32, 24);
+    label17->setBounds (510, 84, 32, 24);
+    deleteSequence->setBounds (104, 176, 64, 24);
+    //[UserResized] Add your own custom resize handling here..
+    //[/UserResized]
+}
+
+void ScripterProcessorEditor::labelTextChanged (Label* labelThatHasChanged)
+{
+    //[UserlabelTextChanged_Pre]
+    //[/UserlabelTextChanged_Pre]
+
+    if (labelThatHasChanged == triggerCh)
+    {
+        //[UserLabelCode_triggerCh] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_triggerCh]
+    }
+    else if (labelThatHasChanged == triggerCC)
+    {
+        //[UserLabelCode_triggerCC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_triggerCC]
+    }
+    else if (labelThatHasChanged == triggerVal)
+    {
+        //[UserLabelCode_triggerVal] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_triggerVal]
+    }
+    else if (labelThatHasChanged == outputEvent0Ch)
+    {
+        //[UserLabelCode_outputEvent0Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID+1, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent0Ch]
+    }
+    else if (labelThatHasChanged == outputEvent0CC)
+    {
+        //[UserLabelCode_outputEvent0CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 1, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent0CC]
+    }
+    else if (labelThatHasChanged == outputEvent0Val)
+    {
+        //[UserLabelCode_outputEvent0Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 1, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent0Val]
+    }
+    else if (labelThatHasChanged == outputEvent1Ch)
+    {
+        //[UserLabelCode_outputEvent1Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 2, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent1Ch]
+    }
+    else if (labelThatHasChanged == outputEvent1CC)
+    {
+        //[UserLabelCode_outputEvent1CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 2, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent1CC]
+    }
+    else if (labelThatHasChanged == outputEvent1Val)
+    {
+        //[UserLabelCode_outputEvent1Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 2, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent1Val]
+    }
+    else if (labelThatHasChanged == outputEvent2Ch)
+    {
+        //[UserLabelCode_outputEvent2Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 3, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent2Ch]
+    }
+    else if (labelThatHasChanged == outputEvent2CC)
+    {
+        //[UserLabelCode_outputEvent2CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 3, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent2CC]
+    }
+    else if (labelThatHasChanged == outputEvent2Val)
+    {
+        //[UserLabelCode_outputEvent2Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 3, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent2Val]
+    }
+    else if (labelThatHasChanged == outputEvent3Ch)
+    {
+        //[UserLabelCode_outputEvent3Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 4, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent3Ch]
+    }
+    else if (labelThatHasChanged == outputEvent3CC)
+    {
+        //[UserLabelCode_outputEvent3CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 4, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent3CC]
+    }
+    else if (labelThatHasChanged == outputEvent3Val)
+    {
+        //[UserLabelCode_outputEvent3Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 4, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent3Val]
+    }
+    else if (labelThatHasChanged == outputEvent4Ch)
+    {
+        //[UserLabelCode_outputEvent4Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 5, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent4Ch]
+    }
+    else if (labelThatHasChanged == outputEvent4CC)
+    {
+        //[UserLabelCode_outputEvent4CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 5, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent4CC]
+    }
+    else if (labelThatHasChanged == outputEvent4Val)
+    {
+        //[UserLabelCode_outputEvent4Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 5, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent4Val]
+    }
+    else if (labelThatHasChanged == outputEvent5Ch)
+    {
+        //[UserLabelCode_outputEvent5Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 6, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent5Ch]
+    }
+    else if (labelThatHasChanged == outputEvent5CC)
+    {
+        //[UserLabelCode_outputEvent5CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 6, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent5CC]
+    }
+    else if (labelThatHasChanged == outputEvent5Val)
+    {
+        //[UserLabelCode_outputEvent5Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 6, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent5Val]
+    }
+    else if (labelThatHasChanged == outputEvent6Ch)
+    {
+        //[UserLabelCode_outputEvent6Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 7, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent6Ch]
+    }
+    else if (labelThatHasChanged == outputEvent6CC)
+    {
+        //[UserLabelCode_outputEvent6CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 7, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent6CC]
+    }
+    else if (labelThatHasChanged == outputEvent6Val)
+    {
+        //[UserLabelCode_outputEvent6Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 7, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent6Val]
+    }
+    else if (labelThatHasChanged == outputEvent7Ch)
+    {
+        //[UserLabelCode_outputEvent7Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 8, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent7Ch]
+    }
+    else if (labelThatHasChanged == outputEvent7CC)
+    {
+        //[UserLabelCode_outputEvent7CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 8, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent7CC]
+    }
+    else if (labelThatHasChanged == outputEvent7Val)
+    {
+        //[UserLabelCode_outputEvent7Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 8, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent7Val]
+    }
+    else if (labelThatHasChanged == outputEvent8Ch)
+    {
+        //[UserLabelCode_outputEvent8Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 9, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent8Ch]
+    }
+    else if (labelThatHasChanged == outputEvent8CC)
+    {
+        //[UserLabelCode_outputEvent8CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 9, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent8CC]
+    }
+    else if (labelThatHasChanged == outputEvent8Val)
+    {
+        //[UserLabelCode_outputEvent8Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 9, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent8Val]
+    }
+    else if (labelThatHasChanged == outputEvent9Ch)
+    {
+        //[UserLabelCode_outputEvent9Ch] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 10, CH_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent9Ch]
+    }
+    else if (labelThatHasChanged == outputEvent9CC)
+    {
+        //[UserLabelCode_outputEvent9CC] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 10, CC_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent9CC]
+    }
+    else if (labelThatHasChanged == outputEvent9Val)
+    {
+        //[UserLabelCode_outputEvent9Val] -- add your label text handling code here..
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 10, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        //[/UserLabelCode_outputEvent9Val]
+    }
+
+    //[UserlabelTextChanged_Post]
+    loadFromStorage();
+    updateGui();
+    //[/UserlabelTextChanged_Post]
+}
+
+void ScripterProcessorEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
+{
+    //[UsercomboBoxChanged_Pre]
+    //[/UsercomboBoxChanged_Pre]
+
+    if (comboBoxThatHasChanged == sequenceSelectorBox)
+    {
+        //[UserComboBoxCode_sequenceSelectorBox] -- add your combo box handling code here..
+        updateGui();
+        int selectedSequence = comboBoxThatHasChanged->getSelectedItemIndex();
+        textEditor->insertTextAtCaret(String(String("SelectedSequence ") + String(selectedSequence) + String("\n")));
+        //[/UserComboBoxCode_sequenceSelectorBox]
+    }
+
+    //[UsercomboBoxChanged_Post]
+    //[/UsercomboBoxChanged_Post]
+}
+
+void ScripterProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
+{
+    //[UserbuttonClicked_Pre]
+    //[/UserbuttonClicked_Pre]
+
+    if (buttonThatWasClicked == addSequence)
+    {
+        //[UserButtonCode_addSequence] -- add your button handler code here..
+        unsigned sequenceSize = m_midiSequenceList.size();
+        if (sequenceSize < MAX_SEQUENCES) {
+            // there is room to add another sequence
+            // To validate sequence set the CC_ID for it's TRIG_ID to non-zero.
+            setElement(m_midiStorage, sequenceSize, TRIG_ID, CC_ID, 1);
+            for (int ev = 0; ev < MAX_EVENTS; ev++) {
+                for (int i = 0; i < 3; i++) {
+                    setElement(m_midiStorage, sequenceSize, ev, i, 0); // clear the sequence
+                }
+            }
+            setElement(m_midiStorage, sequenceSize, TRIG_ID, CC_ID, 1); // validate the sequence
+            loadFromStorage();
+            setSelectedSequence(sequenceSize);
+            updateGui();
+        }
+        //[/UserButtonCode_addSequence]
+    }
+    else if (buttonThatWasClicked == deleteSequence)
+    {
+        //[UserButtonCode_deleteSequence] -- add your button handler code here..
+        unsigned sequenceSize = m_midiSequenceList.size();
+        if (sequenceSize > 0) {
+            unsigned selectedSequence = getSelectedSequence();
+            m_midiSequenceList.erase(m_midiSequenceList.begin() + selectedSequence);
+            if (selectedSequence > 0) {                 
+                // rebuild the selector box
+                sequenceSelectorBox->clear();
+                for (int seq = 0; seq < m_midiSequenceList.size(); seq++) {
+                    sequenceSelectorBox->addItem(String(seq + 1), seq + 1);
+                }
+                setSelectedSequence(selectedSequence - 1);
+            } // select the previous sequence
+            else { sequenceSelectorBox->clear(); } // the list is now empty
+            saveToStorage();
+            updateGui();
+        }
+        //[/UserButtonCode_deleteSequence]
+    }
+
+    //[UserbuttonClicked_Post]
+    //[/UserbuttonClicked_Post]
+}
+
+
+
+//[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+void ScripterProcessorEditor::loadFromStorage() {
+    textEditor->insertTextAtCaret(String("Load from storage called\n"));
+    m_midiSequenceList.clear();
+    unsigned selectedSequence = getSelectedSequence();
+    sequenceSelectorBox->clear();
+
+    for (int seq = 0; seq < MAX_SEQUENCES; seq++) {
+
+        if (getElement(m_midiStorage,seq, 0, 1) != 0) {
+            MidiSequence sequence;
+            for (int ev = 0 ; ev < MAX_EVENTS; ev++) {
+                    MidiEvent event(
+                        getElement(m_midiStorage, seq, ev, 0),
+                        getElement(m_midiStorage, seq, ev, 1),
+                        getElement(m_midiStorage, seq, ev, 2));
+                    sequence.emplace_back(event);
+            }
+            if (!sequence.empty()) { // a valid sequence
+                m_midiSequenceList.emplace_back(sequence);
+                sequenceSelectorBox->addItem(String(seq + 1), seq + 1);
+            }
+            else { // no more valid sequences
+                break;
+            }
+        }
+    }
+
+    if (selectedSequence >= m_midiSequenceList.size()) {
+        selectedSequence = 0;
+    }
+    sequenceSelectorBox->setSelectedItemIndex(selectedSequence, NotificationType::sendNotification);
+    textEditor->insertTextAtCaret(String("Load from storage done\n"));
+}
+
+void ScripterProcessorEditor::saveToStorage() {
+    textEditor->insertTextAtCaret(String("Save to storage called\n"));
+    memset(m_midiStorage, 0, MAX_SEQUENCES * MAX_EVENTS * 3 * sizeof(int)); // clear the midi storage array
+
+    unsigned seqIdx = 0, evIdx = 0;
+    for (auto seq = m_midiSequenceList.begin(); seq != m_midiSequenceList.end(); ++seq) {
+        evIdx = 0;
+        for (auto ev = (*seq).begin(); ev != (*seq).end(); ++ev) {
+            setElement(m_midiStorage, seqIdx, evIdx, CH_ID, (*ev).channel);
+            setElement(m_midiStorage, seqIdx, evIdx,CC_ID, (*ev).cc);
+            setElement(m_midiStorage, seqIdx, evIdx, VAL_ID, (*ev).value);
+            evIdx++;
+        }
+        seqIdx++;
+    }
+
+    textEditor->insertTextAtCaret(String("Save to storage done\n"));
+}
+
+void ScripterProcessorEditor::updateGui()
+{
+    if (m_midiSequenceList.empty()) { 
+        triggerCh->setText(String("0"), NotificationType::sendNotification);
+        triggerCC->setText(String("0"), NotificationType::sendNotification);
+        triggerVal->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent0Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent0CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent0Val->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent1Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent1CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent1Val->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent2Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent2CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent2Val->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent3Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent3CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent3Val->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent4Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent4CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent4Val->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent5Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent5CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent5Val->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent6Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent6CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent6Val->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent7Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent7CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent7Val->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent8Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent8CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent8Val->setText(String("0"), NotificationType::sendNotification);
+
+        outputEvent9Ch->setText(String("0"), NotificationType::sendNotification);
+        outputEvent9CC->setText(String("0"), NotificationType::sendNotification);
+        outputEvent9Val->setText(String("0"), NotificationType::sendNotification);
+        return; 
+    }
+    int selectedSequence = getSelectedSequence();
+    unsigned idx = TRIG_ID;
+
+    triggerCh->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    triggerCC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    triggerVal->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+
+    unsigned numEvents = m_midiSequenceList.at(selectedSequence).size();
+    textEditor->insertTextAtCaret(String(String("Num events ") + String(numEvents) + String("\n")));
+
+    if (idx >= numEvents) { return; }
+    outputEvent0Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent0CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent0Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+
+    if (idx >= numEvents) { return; }
+    textEditor->insertTextAtCaret(String(String("update event 1 ") + String(idx) + String("\n")));
+    outputEvent1Ch->setText( String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent1CC->setText( String(m_midiSequenceList.at(selectedSequence).at(idx).cc),      NotificationType::sendNotification);
+    outputEvent1Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value),   NotificationType::sendNotification);
+    idx++;
+
+    if (idx >= numEvents) { return; }
+    textEditor->insertTextAtCaret(String(String("update event 2 ") + String(idx) + String("\n")));
+    outputEvent2Ch->setText( String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent2CC->setText( String(m_midiSequenceList.at(selectedSequence).at(idx).cc),      NotificationType::sendNotification);
+    outputEvent2Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+
+    if (idx >= numEvents) { return; }
+    textEditor->insertTextAtCaret(String(String("update event 3 ") + String(idx) + String("\n")));
+    outputEvent3Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent3CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent3Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+
+    if (idx >= numEvents) { return; }
+    outputEvent4Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent4CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent4Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+
+    if (idx >= numEvents) { return; }
+    outputEvent5Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent5CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent5Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+
+    if (idx >= numEvents) { return; }
+    outputEvent6Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent6CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent6Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+
+    if (idx >= numEvents) { return; }
+    outputEvent7Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent7CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent7Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+
+    if (idx >= numEvents) { return; }
+    textEditor->insertTextAtCaret(String(String("update event 8 ") + String(idx) + String("\n")));
+    outputEvent8Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent8CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent8Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+
+    if (idx >= numEvents) { return; }
+    textEditor->insertTextAtCaret(String(String("update event 9 ") + String(idx) + String("\n")));
+    outputEvent9Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent9CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent9Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
+    idx++;
+}
+//[/MiscUserCode]
+
+
+//==============================================================================
+#if 0
+/*  -- Projucer information section --
+
+    This is where the Projucer stores the metadata that describe this GUI layout, so
+    make changes in here at your peril!
+
+BEGIN_JUCER_METADATA
+
+<JUCER_COMPONENT documentType="Component" className="ScripterProcessorEditor"
+                 componentName="" parentClasses="public AudioProcessorEditor"
+                 constructorParams="AudioProcessor&amp; ownerFilter, int *midiStorage"
+                 variableInitialisers="AudioProcessorEditor(ownerFilter)" snapPixels="8"
+                 snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
+                 initialWidth="600" initialHeight="400">
+  <BACKGROUND backgroundColour="ff323e44">
+    <TEXT pos="28 20 200 30" fill="solid: ff00ffff" hasStroke="0" text="Blackaddr Audio MidiScripter"
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+  </BACKGROUND>
+  <LABEL name="new label" id="543594e36465d960" memberName="label2" virtualName=""
+         explicitFocusOrder="0" pos="99 62 88 32" edTextCol="ff000000"
+         edBkgCol="0" labelText="Input Event" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="f58ed8a598269e9f" memberName="label3" virtualName=""
+         explicitFocusOrder="0" pos="88 88 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Ch." editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="dc4e395dbf56f230" memberName="label4" virtualName=""
+         explicitFocusOrder="0" pos="128 88 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="CC&#10;" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="5f018bdf25c2ad5c" memberName="label5" virtualName=""
+         explicitFocusOrder="0" pos="168 88 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Val" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="f7bc40719b84f5a2" memberName="triggerCh"
+         virtualName="" explicitFocusOrder="0" pos="88 112 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="f0c29bf453c26c8c" memberName="triggerCC"
+         virtualName="" explicitFocusOrder="0" pos="128 112 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="46c0140facb00a74" memberName="triggerVal"
+         virtualName="" explicitFocusOrder="0" pos="168 112 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="7006fd28c6080ee" memberName="label9" virtualName=""
+         explicitFocusOrder="0" pos="209 61 103 32" edTextCol="ff000000"
+         edBkgCol="0" labelText="Output Events" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="ea0d2f75949f8c95" memberName="label10" virtualName=""
+         explicitFocusOrder="0" pos="22 72 34 32" edTextCol="ff000000"
+         edBkgCol="0" labelText="Seq" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <COMBOBOX name="new combo box" id="bcb98b7a732915d5" memberName="sequenceSelectorBox"
+            virtualName="" explicitFocusOrder="0" pos="20 112 68 48" editable="0"
+            layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
+  <LABEL name="new label" id="f4ee2dff826fa9dd" memberName="outputEvent0Ch"
+         virtualName="" explicitFocusOrder="0" pos="216 112 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="afe8e73c60f41ed2" memberName="outputEvent0CC"
+         virtualName="" explicitFocusOrder="0" pos="216 141 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="1887c7aa0d310c43" memberName="outputEvent0Val"
+         virtualName="" explicitFocusOrder="0" pos="216 171 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="86bee063dc7ba045" memberName="label6" virtualName=""
+         explicitFocusOrder="0" pos="216 88 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#1" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="a8b303d6c437ce46" memberName="outputEvent1Ch"
+         virtualName="" explicitFocusOrder="0" pos="250 111 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="b2125a1a71fc8bb9" memberName="outputEvent1CC"
+         virtualName="" explicitFocusOrder="0" pos="250 140 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="a06f1059dbda195" memberName="outputEvent1Val"
+         virtualName="" explicitFocusOrder="0" pos="250 170 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="6f2bc4f006cb756e" memberName="label7" virtualName=""
+         explicitFocusOrder="0" pos="250 87 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#2" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <TEXTEDITOR name="new text editor" id="a017ed130a1419c" memberName="textEditor"
+              virtualName="" explicitFocusOrder="0" pos="24 224 424 152" initialText=""
+              multiline="1" retKeyStartsLine="1" readonly="0" scrollbars="1"
+              caret="1" popupmenu="1"/>
+  <TEXTBUTTON name="add sequence" id="598515700d23c2c6" memberName="addSequence"
+              virtualName="" explicitFocusOrder="0" pos="24 176 64 24" bgColOff="ff00ffff"
+              textCol="ff000000" buttonText="NEW" connectedEdges="0" needsCallback="1"
+              radioGroupId="0"/>
+  <LABEL name="new label" id="467482ac978518d4" memberName="outputEvent2Ch"
+         virtualName="" explicitFocusOrder="0" pos="283 111 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="524136be7f027a08" memberName="outputEvent2CC"
+         virtualName="" explicitFocusOrder="0" pos="283 140 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="2f44ce69f8a32d58" memberName="outputEvent2Val"
+         virtualName="" explicitFocusOrder="0" pos="283 170 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="955143ae4bec40cb" memberName="label8" virtualName=""
+         explicitFocusOrder="0" pos="283 87 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#3" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="fe8822c60859586" memberName="outputEvent3Ch"
+         virtualName="" explicitFocusOrder="0" pos="316 110 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="412596abd90fd34f" memberName="outputEvent3CC"
+         virtualName="" explicitFocusOrder="0" pos="316 139 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="efa358cdc8436c15" memberName="outputEvent3Val"
+         virtualName="" explicitFocusOrder="0" pos="316 169 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="18c121a1d18e14e0" memberName="label11" virtualName=""
+         explicitFocusOrder="0" pos="316 86 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#4" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="43c74ef3adce0783" memberName="outputEvent4Ch"
+         virtualName="" explicitFocusOrder="0" pos="349 110 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="524f6684e77b4aa" memberName="outputEvent4CC"
+         virtualName="" explicitFocusOrder="0" pos="349 139 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="8f2ca80762002e85" memberName="outputEvent4Val"
+         virtualName="" explicitFocusOrder="0" pos="349 169 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="2d670420cab23730" memberName="label12" virtualName=""
+         explicitFocusOrder="0" pos="349 86 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#5" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="38d82a6073a13959" memberName="outputEvent5Ch"
+         virtualName="" explicitFocusOrder="0" pos="379 109 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="fa92600782075f3c" memberName="outputEvent5CC"
+         virtualName="" explicitFocusOrder="0" pos="379 138 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="fd658a09e66ab620" memberName="outputEvent5Val"
+         virtualName="" explicitFocusOrder="0" pos="379 168 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="7c194088d234ea99" memberName="label13" virtualName=""
+         explicitFocusOrder="0" pos="379 85 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#6" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="4286fe20b999c4ad" memberName="outputEvent6Ch"
+         virtualName="" explicitFocusOrder="0" pos="412 109 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="fa1044dea4948614" memberName="outputEvent6CC"
+         virtualName="" explicitFocusOrder="0" pos="412 138 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="768c43736467b8ee" memberName="outputEvent6Val"
+         virtualName="" explicitFocusOrder="0" pos="412 168 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="d24e4453e8005fe2" memberName="label14" virtualName=""
+         explicitFocusOrder="0" pos="412 85 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#7" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="19f329256a8c84d7" memberName="outputEvent7Ch"
+         virtualName="" explicitFocusOrder="0" pos="447 108 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="a0008e9fcc843569" memberName="outputEvent7CC"
+         virtualName="" explicitFocusOrder="0" pos="447 137 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="eaf688f401989272" memberName="outputEvent7Val"
+         virtualName="" explicitFocusOrder="0" pos="447 167 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="b9815b186206e09f" memberName="label15" virtualName=""
+         explicitFocusOrder="0" pos="447 84 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#8" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="71ef1f3a2a1b5d7f" memberName="outputEvent8Ch"
+         virtualName="" explicitFocusOrder="0" pos="479 108 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="b1d48e425d4c8b89" memberName="outputEvent8CC"
+         virtualName="" explicitFocusOrder="0" pos="479 137 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="59cbc6fa93356027" memberName="outputEvent8Val"
+         virtualName="" explicitFocusOrder="0" pos="479 167 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="41633ab8522195cd" memberName="label16" virtualName=""
+         explicitFocusOrder="0" pos="479 84 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#9" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <LABEL name="new label" id="ca6bec013f6ef80d" memberName="outputEvent9Ch"
+         virtualName="" explicitFocusOrder="0" pos="510 108 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="4d5fc7f723f5d77b" memberName="outputEvent9CC"
+         virtualName="" explicitFocusOrder="0" pos="510 137 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="e66def2fa70110ea" memberName="outputEvent9Val"
+         virtualName="" explicitFocusOrder="0" pos="510 167 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="dab91f4a3270b6bc" memberName="label17" virtualName=""
+         explicitFocusOrder="0" pos="510 84 32 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="#10" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         kerning="0" bold="0" italic="0" justification="33"/>
+  <TEXTBUTTON name="delete sequence" id="d143991517e3ec9b" memberName="deleteSequence"
+              virtualName="" explicitFocusOrder="0" pos="104 176 64 24" bgColOff="ffff0000"
+              textCol="ff000000" buttonText="DELETE" connectedEdges="0" needsCallback="1"
+              radioGroupId="0"/>
+</JUCER_COMPONENT>
+
+END_JUCER_METADATA
+*/
+#endif
+
+
+//[EndFile] You can add extra defines here...
+//[/EndFile]
