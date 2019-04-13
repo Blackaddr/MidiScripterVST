@@ -20,7 +20,7 @@ The plugin works by letting define up to 10 unique SEQUENCES, each with up to 10
 #### ii) send CC#31, 0 (turn off reverb)
 #### iii) send CC#40, 35 (set Amp treble to 35)
 #### iV) send CC#41, 115 (set distortion pedal gain to 115)
-#### v) send CC$32, 127 (turn on compressor)
+#### v) send CC#32, 127 (turn on compressor)
 
 The idea is to use a sequnce for each part of a song. The sequence contains all the MIDI CC messages needed to configure the rest of the VST effects. The VST Host manages each song as a preset, so I have a nice hierarchy of control.
 
