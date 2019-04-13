@@ -34,38 +34,6 @@ ScripterProcessorEditor::ScripterProcessorEditor (AudioProcessor& ownerFilter, i
     m_midiStorage = midiStorage;
     //[/Constructor_pre]
 
-    addAndMakeVisible (label2 = new Label ("new label",
-                                           TRANS("Input Event")));
-    label2->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label2->setJustificationType (Justification::centredLeft);
-    label2->setEditable (false, false, false);
-    label2->setColour (TextEditor::textColourId, Colours::black);
-    label2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (label3 = new Label ("new label",
-                                           TRANS("Ch.")));
-    label3->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label3->setJustificationType (Justification::centredLeft);
-    label3->setEditable (false, false, false);
-    label3->setColour (TextEditor::textColourId, Colours::black);
-    label3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (label4 = new Label ("new label",
-                                           TRANS("CC\n")));
-    label4->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label4->setJustificationType (Justification::centredLeft);
-    label4->setEditable (false, false, false);
-    label4->setColour (TextEditor::textColourId, Colours::black);
-    label4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (label5 = new Label ("new label",
-                                           TRANS("Val")));
-    label5->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label5->setJustificationType (Justification::centredLeft);
-    label5->setEditable (false, false, false);
-    label5->setColour (TextEditor::textColourId, Colours::black);
-    label5->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
     addAndMakeVisible (triggerCh = new Label ("new label",
                                               TRANS("0\n")));
     triggerCh->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
@@ -92,22 +60,6 @@ ScripterProcessorEditor::ScripterProcessorEditor (AudioProcessor& ownerFilter, i
     triggerVal->setColour (TextEditor::textColourId, Colours::black);
     triggerVal->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
     triggerVal->addListener (this);
-
-    addAndMakeVisible (label9 = new Label ("new label",
-                                           TRANS("Output Events")));
-    label9->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label9->setJustificationType (Justification::centredLeft);
-    label9->setEditable (false, false, false);
-    label9->setColour (TextEditor::textColourId, Colours::black);
-    label9->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (label10 = new Label ("new label",
-                                            TRANS("Seq")));
-    label10->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label10->setJustificationType (Justification::centredLeft);
-    label10->setEditable (false, false, false);
-    label10->setColour (TextEditor::textColourId, Colours::black);
-    label10->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (sequenceSelectorBox = new ComboBox ("new combo box"));
     sequenceSelectorBox->setEditableText (false);
@@ -506,15 +458,9 @@ ScripterProcessorEditor::~ScripterProcessorEditor()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    label2 = nullptr;
-    label3 = nullptr;
-    label4 = nullptr;
-    label5 = nullptr;
     triggerCh = nullptr;
     triggerCC = nullptr;
     triggerVal = nullptr;
-    label9 = nullptr;
-    label10 = nullptr;
     sequenceSelectorBox = nullptr;
     outputEvent0Ch = nullptr;
     outputEvent0CC = nullptr;
@@ -574,9 +520,117 @@ void ScripterProcessorEditor::paint (Graphics& g)
     g.fillAll (Colour (0xff323e44));
 
     {
-        int x = 28, y = 20, width = 228, height = 30;
-        String text (TRANS("Blackaddr Audio MidiScripter v0.1.0"));
+        int x = 28, y = 20, width = 236, height = 30;
+        String text (TRANS("Blackaddr Audio MidiScripter 0.1.0"));
         Colour fillColour = Colours::aqua;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    {
+        int x = 244, y = 108, width = 28, height = 30;
+        String text (TRANS("Ch."));
+        Colour fillColour = Colours::azure;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    {
+        int x = 244, y = 140, width = 28, height = 30;
+        String text (TRANS("CC"));
+        Colour fillColour = Colours::azure;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    {
+        int x = 244, y = 172, width = 28, height = 30;
+        String text (TRANS("Val"));
+        Colour fillColour = Colours::azure;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    {
+        int x = 92, y = 84, width = 28, height = 30;
+        String text (TRANS("Ch."));
+        Colour fillColour = Colours::azure;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    {
+        int x = 132, y = 84, width = 28, height = 30;
+        String text (TRANS("CC"));
+        Colour fillColour = Colours::azure;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    {
+        int x = 172, y = 84, width = 28, height = 30;
+        String text (TRANS("Val"));
+        Colour fillColour = Colours::azure;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    {
+        int x = 268, y = 60, width = 100, height = 30;
+        String text (TRANS("Output Events"));
+        Colour fillColour = Colours::azure;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    {
+        int x = 100, y = 60, width = 100, height = 30;
+        String text (TRANS("Trigger Event"));
+        Colour fillColour = Colours::azure;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (fillColour);
+        g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    Justification::centred, true);
+    }
+
+    {
+        int x = 36, y = 84, width = 44, height = 30;
+        String text (TRANS("Seq."));
+        Colour fillColour = Colours::azure;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
         g.setColour (fillColour);
@@ -594,58 +648,52 @@ void ScripterProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    label2->setBounds (99, 62, 88, 32);
-    label3->setBounds (88, 88, 32, 24);
-    label4->setBounds (128, 88, 32, 24);
-    label5->setBounds (168, 88, 32, 24);
-    triggerCh->setBounds (88, 112, 32, 24);
-    triggerCC->setBounds (128, 112, 32, 24);
-    triggerVal->setBounds (168, 112, 32, 24);
-    label9->setBounds (209, 61, 103, 32);
-    label10->setBounds (22, 72, 34, 32);
+    triggerCh->setBounds (92, 112, 32, 24);
+    triggerCC->setBounds (135, 112, 32, 24);
+    triggerVal->setBounds (177, 112, 32, 24);
     sequenceSelectorBox->setBounds (20, 112, 68, 48);
-    outputEvent0Ch->setBounds (216, 112, 32, 24);
-    outputEvent0CC->setBounds (216, 141, 32, 24);
-    outputEvent0Val->setBounds (216, 171, 32, 24);
-    label6->setBounds (216, 88, 32, 24);
-    outputEvent1Ch->setBounds (250, 111, 32, 24);
-    outputEvent1CC->setBounds (250, 140, 32, 24);
-    outputEvent1Val->setBounds (250, 170, 32, 24);
-    label7->setBounds (250, 87, 32, 24);
+    outputEvent0Ch->setBounds (265, 111, 32, 24);
+    outputEvent0CC->setBounds (265, 141, 32, 24);
+    outputEvent0Val->setBounds (265, 175, 32, 24);
+    label6->setBounds (265, 88, 32, 24);
+    outputEvent1Ch->setBounds (299, 111, 32, 24);
+    outputEvent1CC->setBounds (299, 143, 32, 24);
+    outputEvent1Val->setBounds (299, 175, 32, 24);
+    label7->setBounds (299, 87, 32, 24);
     textEditor->setBounds (24, 224, 424, 152);
     addSequence->setBounds (24, 176, 64, 24);
-    outputEvent2Ch->setBounds (283, 111, 32, 24);
-    outputEvent2CC->setBounds (283, 140, 32, 24);
-    outputEvent2Val->setBounds (283, 170, 32, 24);
-    label8->setBounds (283, 87, 32, 24);
-    outputEvent3Ch->setBounds (316, 110, 32, 24);
-    outputEvent3CC->setBounds (316, 139, 32, 24);
-    outputEvent3Val->setBounds (316, 169, 32, 24);
-    label11->setBounds (316, 86, 32, 24);
-    outputEvent4Ch->setBounds (349, 110, 32, 24);
-    outputEvent4CC->setBounds (349, 139, 32, 24);
-    outputEvent4Val->setBounds (349, 169, 32, 24);
-    label12->setBounds (349, 86, 32, 24);
-    outputEvent5Ch->setBounds (379, 109, 32, 24);
-    outputEvent5CC->setBounds (379, 138, 32, 24);
-    outputEvent5Val->setBounds (379, 168, 32, 24);
-    label13->setBounds (379, 85, 32, 24);
-    outputEvent6Ch->setBounds (412, 109, 32, 24);
-    outputEvent6CC->setBounds (412, 138, 32, 24);
-    outputEvent6Val->setBounds (412, 168, 32, 24);
-    label14->setBounds (412, 85, 32, 24);
-    outputEvent7Ch->setBounds (447, 108, 32, 24);
-    outputEvent7CC->setBounds (447, 137, 32, 24);
-    outputEvent7Val->setBounds (447, 167, 32, 24);
-    label15->setBounds (447, 84, 32, 24);
-    outputEvent8Ch->setBounds (479, 108, 32, 24);
-    outputEvent8CC->setBounds (479, 137, 32, 24);
-    outputEvent8Val->setBounds (479, 167, 32, 24);
-    label16->setBounds (479, 84, 32, 24);
-    outputEvent9Ch->setBounds (510, 108, 32, 24);
-    outputEvent9CC->setBounds (510, 137, 32, 24);
-    outputEvent9Val->setBounds (510, 167, 32, 24);
-    label17->setBounds (510, 84, 32, 24);
+    outputEvent2Ch->setBounds (332, 111, 32, 24);
+    outputEvent2CC->setBounds (332, 144, 32, 24);
+    outputEvent2Val->setBounds (332, 175, 32, 24);
+    label8->setBounds (332, 87, 32, 24);
+    outputEvent3Ch->setBounds (365, 111, 32, 24);
+    outputEvent3CC->setBounds (365, 144, 32, 24);
+    outputEvent3Val->setBounds (365, 175, 32, 24);
+    label11->setBounds (365, 86, 32, 24);
+    outputEvent4Ch->setBounds (398, 110, 32, 24);
+    outputEvent4CC->setBounds (398, 144, 32, 24);
+    outputEvent4Val->setBounds (398, 175, 32, 24);
+    label12->setBounds (398, 86, 32, 24);
+    outputEvent5Ch->setBounds (428, 111, 32, 24);
+    outputEvent5CC->setBounds (428, 144, 32, 24);
+    outputEvent5Val->setBounds (428, 175, 32, 24);
+    label13->setBounds (428, 85, 32, 24);
+    outputEvent6Ch->setBounds (461, 111, 32, 24);
+    outputEvent6CC->setBounds (461, 144, 32, 24);
+    outputEvent6Val->setBounds (461, 175, 32, 24);
+    label14->setBounds (461, 85, 32, 24);
+    outputEvent7Ch->setBounds (496, 111, 32, 24);
+    outputEvent7CC->setBounds (496, 144, 32, 24);
+    outputEvent7Val->setBounds (496, 175, 32, 24);
+    label15->setBounds (496, 84, 32, 24);
+    outputEvent8Ch->setBounds (528, 111, 32, 24);
+    outputEvent8CC->setBounds (528, 144, 32, 24);
+    outputEvent8Val->setBounds (528, 175, 32, 24);
+    label16->setBounds (528, 84, 32, 24);
+    outputEvent9Ch->setBounds (559, 111, 32, 24);
+    outputEvent9CC->setBounds (559, 143, 32, 24);
+    outputEvent9Val->setBounds (559, 175, 32, 24);
+    label17->setBounds (559, 84, 32, 24);
     deleteSequence->setBounds (104, 176, 64, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
@@ -1129,95 +1177,92 @@ BEGIN_JUCER_METADATA
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
                  initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ff323e44">
-    <TEXT pos="28 20 228 30" fill="solid: ff00ffff" hasStroke="0" text="Blackaddr Audio MidiScripter v0.1.0"
+    <TEXT pos="28 20 236 30" fill="solid: ff00ffff" hasStroke="0" text="Blackaddr Audio MidiScripter 0.1.0"
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+    <TEXT pos="244 108 28 30" fill="solid: fff0ffff" hasStroke="0" text="Ch."
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+    <TEXT pos="244 140 28 30" fill="solid: fff0ffff" hasStroke="0" text="CC"
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+    <TEXT pos="244 172 28 30" fill="solid: fff0ffff" hasStroke="0" text="Val"
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+    <TEXT pos="92 84 28 30" fill="solid: fff0ffff" hasStroke="0" text="Ch."
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+    <TEXT pos="132 84 28 30" fill="solid: fff0ffff" hasStroke="0" text="CC"
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+    <TEXT pos="172 84 28 30" fill="solid: fff0ffff" hasStroke="0" text="Val"
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+    <TEXT pos="268 60 100 30" fill="solid: fff0ffff" hasStroke="0" text="Output Events"
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+    <TEXT pos="100 60 100 30" fill="solid: fff0ffff" hasStroke="0" text="Trigger Event"
+          fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
+          justification="36"/>
+    <TEXT pos="36 84 44 30" fill="solid: fff0ffff" hasStroke="0" text="Seq."
           fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
           justification="36"/>
   </BACKGROUND>
-  <LABEL name="new label" id="543594e36465d960" memberName="label2" virtualName=""
-         explicitFocusOrder="0" pos="99 62 88 32" edTextCol="ff000000"
-         edBkgCol="0" labelText="Input Event" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
-  <LABEL name="new label" id="f58ed8a598269e9f" memberName="label3" virtualName=""
-         explicitFocusOrder="0" pos="88 88 32 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="Ch." editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
-  <LABEL name="new label" id="dc4e395dbf56f230" memberName="label4" virtualName=""
-         explicitFocusOrder="0" pos="128 88 32 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="CC&#10;" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
-  <LABEL name="new label" id="5f018bdf25c2ad5c" memberName="label5" virtualName=""
-         explicitFocusOrder="0" pos="168 88 32 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="Val" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="f7bc40719b84f5a2" memberName="triggerCh"
-         virtualName="" explicitFocusOrder="0" pos="88 112 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="92 112 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="f0c29bf453c26c8c" memberName="triggerCC"
-         virtualName="" explicitFocusOrder="0" pos="128 112 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="135 112 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="46c0140facb00a74" memberName="triggerVal"
-         virtualName="" explicitFocusOrder="0" pos="168 112 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="177 112 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
-  <LABEL name="new label" id="7006fd28c6080ee" memberName="label9" virtualName=""
-         explicitFocusOrder="0" pos="209 61 103 32" edTextCol="ff000000"
-         edBkgCol="0" labelText="Output Events" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
-  <LABEL name="new label" id="ea0d2f75949f8c95" memberName="label10" virtualName=""
-         explicitFocusOrder="0" pos="22 72 34 32" edTextCol="ff000000"
-         edBkgCol="0" labelText="Seq" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="new combo box" id="bcb98b7a732915d5" memberName="sequenceSelectorBox"
             virtualName="" explicitFocusOrder="0" pos="20 112 68 48" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <LABEL name="new label" id="f4ee2dff826fa9dd" memberName="outputEvent0Ch"
-         virtualName="" explicitFocusOrder="0" pos="216 112 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="265 111 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="afe8e73c60f41ed2" memberName="outputEvent0CC"
-         virtualName="" explicitFocusOrder="0" pos="216 141 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="265 141 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="1887c7aa0d310c43" memberName="outputEvent0Val"
-         virtualName="" explicitFocusOrder="0" pos="216 171 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="265 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="86bee063dc7ba045" memberName="label6" virtualName=""
-         explicitFocusOrder="0" pos="216 88 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="265 88 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#1" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="a8b303d6c437ce46" memberName="outputEvent1Ch"
-         virtualName="" explicitFocusOrder="0" pos="250 111 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="299 111 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="b2125a1a71fc8bb9" memberName="outputEvent1CC"
-         virtualName="" explicitFocusOrder="0" pos="250 140 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="299 143 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="a06f1059dbda195" memberName="outputEvent1Val"
-         virtualName="" explicitFocusOrder="0" pos="250 170 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="299 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="6f2bc4f006cb756e" memberName="label7" virtualName=""
-         explicitFocusOrder="0" pos="250 87 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="299 87 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#2" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
@@ -1230,162 +1275,162 @@ BEGIN_JUCER_METADATA
               textCol="ff000000" buttonText="NEW" connectedEdges="0" needsCallback="1"
               radioGroupId="0"/>
   <LABEL name="new label" id="467482ac978518d4" memberName="outputEvent2Ch"
-         virtualName="" explicitFocusOrder="0" pos="283 111 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="332 111 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="524136be7f027a08" memberName="outputEvent2CC"
-         virtualName="" explicitFocusOrder="0" pos="283 140 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="332 144 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="2f44ce69f8a32d58" memberName="outputEvent2Val"
-         virtualName="" explicitFocusOrder="0" pos="283 170 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="332 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="955143ae4bec40cb" memberName="label8" virtualName=""
-         explicitFocusOrder="0" pos="283 87 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="332 87 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#3" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="fe8822c60859586" memberName="outputEvent3Ch"
-         virtualName="" explicitFocusOrder="0" pos="316 110 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="365 111 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="412596abd90fd34f" memberName="outputEvent3CC"
-         virtualName="" explicitFocusOrder="0" pos="316 139 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="365 144 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="efa358cdc8436c15" memberName="outputEvent3Val"
-         virtualName="" explicitFocusOrder="0" pos="316 169 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="365 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="18c121a1d18e14e0" memberName="label11" virtualName=""
-         explicitFocusOrder="0" pos="316 86 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="365 86 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#4" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="43c74ef3adce0783" memberName="outputEvent4Ch"
-         virtualName="" explicitFocusOrder="0" pos="349 110 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="398 110 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="524f6684e77b4aa" memberName="outputEvent4CC"
-         virtualName="" explicitFocusOrder="0" pos="349 139 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="398 144 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="8f2ca80762002e85" memberName="outputEvent4Val"
-         virtualName="" explicitFocusOrder="0" pos="349 169 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="398 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="2d670420cab23730" memberName="label12" virtualName=""
-         explicitFocusOrder="0" pos="349 86 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="398 86 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#5" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="38d82a6073a13959" memberName="outputEvent5Ch"
-         virtualName="" explicitFocusOrder="0" pos="379 109 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="428 111 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="fa92600782075f3c" memberName="outputEvent5CC"
-         virtualName="" explicitFocusOrder="0" pos="379 138 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="428 144 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="fd658a09e66ab620" memberName="outputEvent5Val"
-         virtualName="" explicitFocusOrder="0" pos="379 168 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="428 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="7c194088d234ea99" memberName="label13" virtualName=""
-         explicitFocusOrder="0" pos="379 85 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="428 85 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#6" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="4286fe20b999c4ad" memberName="outputEvent6Ch"
-         virtualName="" explicitFocusOrder="0" pos="412 109 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="461 111 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="fa1044dea4948614" memberName="outputEvent6CC"
-         virtualName="" explicitFocusOrder="0" pos="412 138 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="461 144 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="768c43736467b8ee" memberName="outputEvent6Val"
-         virtualName="" explicitFocusOrder="0" pos="412 168 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="461 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="d24e4453e8005fe2" memberName="label14" virtualName=""
-         explicitFocusOrder="0" pos="412 85 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="461 85 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#7" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="19f329256a8c84d7" memberName="outputEvent7Ch"
-         virtualName="" explicitFocusOrder="0" pos="447 108 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="496 111 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="a0008e9fcc843569" memberName="outputEvent7CC"
-         virtualName="" explicitFocusOrder="0" pos="447 137 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="496 144 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="eaf688f401989272" memberName="outputEvent7Val"
-         virtualName="" explicitFocusOrder="0" pos="447 167 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="496 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="b9815b186206e09f" memberName="label15" virtualName=""
-         explicitFocusOrder="0" pos="447 84 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="496 84 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#8" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="71ef1f3a2a1b5d7f" memberName="outputEvent8Ch"
-         virtualName="" explicitFocusOrder="0" pos="479 108 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="528 111 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="b1d48e425d4c8b89" memberName="outputEvent8CC"
-         virtualName="" explicitFocusOrder="0" pos="479 137 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="528 144 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="59cbc6fa93356027" memberName="outputEvent8Val"
-         virtualName="" explicitFocusOrder="0" pos="479 167 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="528 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="41633ab8522195cd" memberName="label16" virtualName=""
-         explicitFocusOrder="0" pos="479 84 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="528 84 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#9" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="ca6bec013f6ef80d" memberName="outputEvent9Ch"
-         virtualName="" explicitFocusOrder="0" pos="510 108 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="559 111 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="4d5fc7f723f5d77b" memberName="outputEvent9CC"
-         virtualName="" explicitFocusOrder="0" pos="510 137 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="559 143 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="e66def2fa70110ea" memberName="outputEvent9Val"
-         virtualName="" explicitFocusOrder="0" pos="510 167 32 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="559 175 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="0&#10;" editableSingleClick="1" editableDoubleClick="1"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="dab91f4a3270b6bc" memberName="label17" virtualName=""
-         explicitFocusOrder="0" pos="510 84 32 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="559 84 32 24" edTextCol="ff000000"
          edBkgCol="0" labelText="#10" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>

@@ -72,15 +72,9 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> label2;
-    ScopedPointer<Label> label3;
-    ScopedPointer<Label> label4;
-    ScopedPointer<Label> label5;
     ScopedPointer<Label> triggerCh;
     ScopedPointer<Label> triggerCC;
     ScopedPointer<Label> triggerVal;
-    ScopedPointer<Label> label9;
-    ScopedPointer<Label> label10;
     ScopedPointer<ComboBox> sequenceSelectorBox;
     ScopedPointer<Label> outputEvent0Ch;
     ScopedPointer<Label> outputEvent0CC;
