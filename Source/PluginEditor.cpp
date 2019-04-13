@@ -574,8 +574,8 @@ void ScripterProcessorEditor::paint (Graphics& g)
     g.fillAll (Colour (0xff323e44));
 
     {
-        int x = 28, y = 20, width = 200, height = 30;
-        String text (TRANS("Blackaddr Audio MidiScripter"));
+        int x = 28, y = 20, width = 228, height = 30;
+        String text (TRANS("Blackaddr Audio MidiScripter v0.1.0"));
         Colour fillColour = Colours::aqua;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
@@ -911,7 +911,7 @@ void ScripterProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
         if (sequenceSize > 0) {
             unsigned selectedSequence = getSelectedSequence();
             m_midiSequenceList.erase(m_midiSequenceList.begin() + selectedSequence);
-            if (selectedSequence > 0) {                 
+            if (selectedSequence > 0) {
                 // rebuild the selector box
                 sequenceSelectorBox->clear();
                 for (int seq = 0; seq < m_midiSequenceList.size(); seq++) {
@@ -988,7 +988,7 @@ void ScripterProcessorEditor::saveToStorage() {
 
 void ScripterProcessorEditor::updateGui()
 {
-    if (m_midiSequenceList.empty()) { 
+    if (m_midiSequenceList.empty()) {
         triggerCh->setText(String("0"), NotificationType::sendNotification);
         triggerCC->setText(String("0"), NotificationType::sendNotification);
         triggerVal->setText(String("0"), NotificationType::sendNotification);
@@ -1032,7 +1032,7 @@ void ScripterProcessorEditor::updateGui()
         outputEvent9Ch->setText(String("0"), NotificationType::sendNotification);
         outputEvent9CC->setText(String("0"), NotificationType::sendNotification);
         outputEvent9Val->setText(String("0"), NotificationType::sendNotification);
-        return; 
+        return;
     }
     int selectedSequence = getSelectedSequence();
     unsigned idx = TRIG_ID;
@@ -1129,7 +1129,7 @@ BEGIN_JUCER_METADATA
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
                  initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ff323e44">
-    <TEXT pos="28 20 200 30" fill="solid: ff00ffff" hasStroke="0" text="Blackaddr Audio MidiScripter"
+    <TEXT pos="28 20 228 30" fill="solid: ff00ffff" hasStroke="0" text="Blackaddr Audio MidiScripter v0.1.0"
           fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
           justification="36"/>
   </BACKGROUND>
