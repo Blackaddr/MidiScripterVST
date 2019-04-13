@@ -11,16 +11,16 @@ I needed a basic pluggin to make it a little easier to reconfigure a large numbe
 
 The plugin works by letting define up to 10 unique SEQUENCES, each with up to 10 output MIDI events per sequence. Here's an example sequence to illustrate:
 
-1) TRIGGER: Hit a stomp switch on my MIDI Foot Controller which sends CC#20 with value 127.
+### 1) TRIGGER: Hit a stomp switch on my MIDI Foot Controller which sends CC#20 with value 127.
 
-2) SEQUENCE: Create a sequence in MidiScripterVST that looks for CC#20, value 127. When it sees this EVENT, execute the following settings for a lead solo for example:
+### 2) SEQUENCE: Create a sequence in MidiScripterVST that looks for CC#20, value 127. When it sees this EVENT, execute the following settings for a lead solo for example:
 
-Sequence #1:
-i) send CC#30, 127 (turn on distortion, a.k.a no bypass)
-ii) send CC#31, 0 (turn off reverb)
-iii) send CC#40, 35 (set Amp treble to 35)
-iV) send CC#41, 115 (set distortion pedal gain to 115)
-v) send CC$32, 127 (turn on compressor)
+
+#### i) send CC#30, 127 (turn on distortion, a.k.a no bypass)
+#### ii) send CC#31, 0 (turn off reverb)
+#### iii) send CC#40, 35 (set Amp treble to 35)
+#### iV) send CC#41, 115 (set distortion pedal gain to 115)
+#### v) send CC$32, 127 (turn on compressor)
 
 The idea is to use a sequnce for each part of a song. The sequence contains all the MIDI CC messages needed to configure the rest of the VST effects. The VST Host manages each song as a preset, so I have a nice hierarchy of control.
 
