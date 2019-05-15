@@ -11,7 +11,6 @@
 #pragma once
 
 #include <vector>
-#include "../JuceLibraryCode/JuceHeader.h"
 
 constexpr unsigned MAX_SEQUENCES = 10;
 constexpr unsigned MAX_EVENTS = 11;
@@ -34,9 +33,7 @@ struct MidiEvent {
 using MidiSequence = std::vector<MidiEvent>;
 using MidiSequenceList = std::vector<MidiSequence>;
 
-//int  getElement(int *arr, int seq, int ev, int word);
-//int  getElement(AudioParameterInt *(*paramArray)[MAX_EVENTS][MAX_EVENTS][3], int seq, int ev, int word);
-//void setElement(int *arr, int seq, int ev, int word, int value);
-//void setElement(AudioParameterInt *(*paramArray)[MAX_EVENTS][MAX_EVENTS][3], int seq, int ev, int word, int val);
+int  getElement(int *arr, int seq, int ev, int word);
+void setElement(int *arr, int seq, int ev, int word, int value);
 //int  getElement(int (&arr)[MAX_SEQUENCES][MAX_EVENTS][3], int seq, int ev, int word);
 //void setElement(int (&arr)[MAX_EVENTS][MAX_EVENTS][3], int seq, int ev, int word, int value);

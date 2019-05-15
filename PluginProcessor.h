@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Misc.h"
+#include "PluginEditor.h"
 
 
 //==============================================================================
@@ -57,28 +57,11 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    void setElement(int seq, int ev, int word, int value);
-    int  getElement(int seq, int ev, int word);
-    void clearElements();
-
-    unsigned getSequenceSize() { return m_midiSequenceList->size(); }
-    void addSequence();
-    void removeSequence();
-    void setSelectedSequence(unsigned index) { m_selectedSequence = index; }
-    unsigned getSelectedSequence() { return m_selectedSequence; }
-    void loadFromStorage();
-    void saveToStorage();
-    MidiEvent getEvent(int seq, int ev) { return m_midiSequenceList->at(seq).at(ev); }
-
 private:
     //==============================================================================
-    //ScripterProcessorEditor *editor = nullptr;
+    ScripterProcessorEditor *editor = nullptr;
     AudioParameterInt *paramArray[MAX_EVENTS][MAX_EVENTS][3];
-    MidiSequenceList *m_midiSequenceList;
-    unsigned m_selectedSequence = 0;
-    void setElementLocal(int seq, int ev, int word, int value);
-    AudioProcessorEditor* m_editor = nullptr;
-    bool m_printAllCCEvents = true;
+    int *m_midiStorage = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ScripterAudioProcessor)
     

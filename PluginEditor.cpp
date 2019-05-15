@@ -18,7 +18,6 @@
 */
 
 //[Headers] You can add your own extra header files here...
-#include "PluginProcessor.h"
 //[/Headers]
 
 #include "PluginEditor.h"
@@ -28,10 +27,11 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-ScripterProcessorEditor::ScripterProcessorEditor (AudioProcessor& ownerFilter)
+ScripterProcessorEditor::ScripterProcessorEditor (AudioProcessor& ownerFilter, int *midiStorage)
     : AudioProcessorEditor(ownerFilter)
 {
     //[Constructor_pre] You can add your own custom stuff here..
+    m_midiStorage = midiStorage;
     //[/Constructor_pre]
 
     addAndMakeVisible (triggerCh = new Label ("new label",
@@ -447,7 +447,8 @@ ScripterProcessorEditor::ScripterProcessorEditor (AudioProcessor& ownerFilter)
 
 
     //[Constructor] You can add your own custom stuff here..
-    updateSelector();
+    loadFromStorage();
+    setSelectedSequence(0);
     updateGui();
     //[/Constructor]
 }
@@ -520,7 +521,7 @@ void ScripterProcessorEditor::paint (Graphics& g)
 
     {
         int x = 28, y = 20, width = 236, height = 30;
-        String text (TRANS("Blackaddr Audio MidiScripter 0.2.0"));
+        String text (TRANS("Blackaddr Audio MidiScripter 0.1.0"));
         Colour fillColour = Colours::aqua;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
@@ -701,210 +702,209 @@ void ScripterProcessorEditor::resized()
 void ScripterProcessorEditor::labelTextChanged (Label* labelThatHasChanged)
 {
     //[UserlabelTextChanged_Pre]
-    ScripterAudioProcessor* ourProcessor = getProcessor();
-    if (getProcessor()->getSequenceSize() == 0) { return; }
     //[/UserlabelTextChanged_Pre]
 
     if (labelThatHasChanged == triggerCh)
     {
         //[UserLabelCode_triggerCh] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_triggerCh]
     }
     else if (labelThatHasChanged == triggerCC)
     {
         //[UserLabelCode_triggerCC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_triggerCC]
     }
     else if (labelThatHasChanged == triggerVal)
     {
         //[UserLabelCode_triggerVal] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_triggerVal]
     }
     else if (labelThatHasChanged == outputEvent0Ch)
     {
         //[UserLabelCode_outputEvent0Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID+1, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID+1, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent0Ch]
     }
     else if (labelThatHasChanged == outputEvent0CC)
     {
         //[UserLabelCode_outputEvent0CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 1, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 1, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent0CC]
     }
     else if (labelThatHasChanged == outputEvent0Val)
     {
         //[UserLabelCode_outputEvent0Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 1, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 1, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent0Val]
     }
     else if (labelThatHasChanged == outputEvent1Ch)
     {
         //[UserLabelCode_outputEvent1Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 2, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 2, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent1Ch]
     }
     else if (labelThatHasChanged == outputEvent1CC)
     {
         //[UserLabelCode_outputEvent1CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 2, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 2, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent1CC]
     }
     else if (labelThatHasChanged == outputEvent1Val)
     {
         //[UserLabelCode_outputEvent1Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 2, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 2, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent1Val]
     }
     else if (labelThatHasChanged == outputEvent2Ch)
     {
         //[UserLabelCode_outputEvent2Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 3, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 3, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent2Ch]
     }
     else if (labelThatHasChanged == outputEvent2CC)
     {
         //[UserLabelCode_outputEvent2CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 3, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 3, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent2CC]
     }
     else if (labelThatHasChanged == outputEvent2Val)
     {
         //[UserLabelCode_outputEvent2Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 3, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 3, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent2Val]
     }
     else if (labelThatHasChanged == outputEvent3Ch)
     {
         //[UserLabelCode_outputEvent3Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 4, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 4, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent3Ch]
     }
     else if (labelThatHasChanged == outputEvent3CC)
     {
         //[UserLabelCode_outputEvent3CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 4, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 4, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent3CC]
     }
     else if (labelThatHasChanged == outputEvent3Val)
     {
         //[UserLabelCode_outputEvent3Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 4, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 4, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent3Val]
     }
     else if (labelThatHasChanged == outputEvent4Ch)
     {
         //[UserLabelCode_outputEvent4Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 5, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 5, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent4Ch]
     }
     else if (labelThatHasChanged == outputEvent4CC)
     {
         //[UserLabelCode_outputEvent4CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 5, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 5, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent4CC]
     }
     else if (labelThatHasChanged == outputEvent4Val)
     {
         //[UserLabelCode_outputEvent4Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 5, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 5, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent4Val]
     }
     else if (labelThatHasChanged == outputEvent5Ch)
     {
         //[UserLabelCode_outputEvent5Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 6, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 6, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent5Ch]
     }
     else if (labelThatHasChanged == outputEvent5CC)
     {
         //[UserLabelCode_outputEvent5CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 6, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 6, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent5CC]
     }
     else if (labelThatHasChanged == outputEvent5Val)
     {
         //[UserLabelCode_outputEvent5Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 6, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 6, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent5Val]
     }
     else if (labelThatHasChanged == outputEvent6Ch)
     {
         //[UserLabelCode_outputEvent6Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 7, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 7, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent6Ch]
     }
     else if (labelThatHasChanged == outputEvent6CC)
     {
         //[UserLabelCode_outputEvent6CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 7, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 7, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent6CC]
     }
     else if (labelThatHasChanged == outputEvent6Val)
     {
         //[UserLabelCode_outputEvent6Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 7, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 7, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent6Val]
     }
     else if (labelThatHasChanged == outputEvent7Ch)
     {
         //[UserLabelCode_outputEvent7Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 8, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 8, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent7Ch]
     }
     else if (labelThatHasChanged == outputEvent7CC)
     {
         //[UserLabelCode_outputEvent7CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 8, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 8, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent7CC]
     }
     else if (labelThatHasChanged == outputEvent7Val)
     {
         //[UserLabelCode_outputEvent7Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 8, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 8, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent7Val]
     }
     else if (labelThatHasChanged == outputEvent8Ch)
     {
         //[UserLabelCode_outputEvent8Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 9, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 9, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent8Ch]
     }
     else if (labelThatHasChanged == outputEvent8CC)
     {
         //[UserLabelCode_outputEvent8CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 9, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 9, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent8CC]
     }
     else if (labelThatHasChanged == outputEvent8Val)
     {
         //[UserLabelCode_outputEvent8Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 9, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 9, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent8Val]
     }
     else if (labelThatHasChanged == outputEvent9Ch)
     {
         //[UserLabelCode_outputEvent9Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 10, CH_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 10, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent9Ch]
     }
     else if (labelThatHasChanged == outputEvent9CC)
     {
         //[UserLabelCode_outputEvent9CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 10, CC_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 10, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent9CC]
     }
     else if (labelThatHasChanged == outputEvent9Val)
     {
         //[UserLabelCode_outputEvent9Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 10, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        setElement(m_midiStorage, getSelectedSequence(), TRIG_ID + 10, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent9Val]
     }
 
     //[UserlabelTextChanged_Post]
+    loadFromStorage();
     updateGui();
     //[/UserlabelTextChanged_Post]
 }
@@ -912,16 +912,14 @@ void ScripterProcessorEditor::labelTextChanged (Label* labelThatHasChanged)
 void ScripterProcessorEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 {
     //[UsercomboBoxChanged_Pre]
-    if (getProcessor()->getSequenceSize() == 0) { return; }
     //[/UsercomboBoxChanged_Pre]
 
     if (comboBoxThatHasChanged == sequenceSelectorBox)
     {
         //[UserComboBoxCode_sequenceSelectorBox] -- add your combo box handling code here..
-
-        int selectedSequence = comboBoxThatHasChanged->getSelectedItemIndex();
-        getProcessor()->setSelectedSequence(selectedSequence);
         updateGui();
+        int selectedSequence = comboBoxThatHasChanged->getSelectedItemIndex();
+        //textEditor->insertTextAtCaret(String(String("SelectedSequence ") + String(selectedSequence) + String("\n")));
         //[/UserComboBoxCode_sequenceSelectorBox]
     }
 
@@ -937,24 +935,42 @@ void ScripterProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == addSequence)
     {
         //[UserButtonCode_addSequence] -- add your button handler code here..
-        getProcessor()->addSequence();
-        int sequenceSize = getProcessor()->getSequenceSize();
-        sequenceSelectorBox->addItem(String(sequenceSize), sequenceSize);
-        sequenceSelectorBox->setSelectedItemIndex(getProcessor()->getSelectedSequence());
-        updateGui();
+        unsigned sequenceSize = m_midiSequenceList.size();
+        if (sequenceSize < MAX_SEQUENCES) {
+            // there is room to add another sequence
+            // To validate sequence set the CC_ID for it's TRIG_ID to non-zero.
+            setElement(m_midiStorage, sequenceSize, TRIG_ID, CC_ID, 1);
+            for (int ev = 0; ev < MAX_EVENTS; ev++) {
+                for (int i = 0; i < 3; i++) {
+                    setElement(m_midiStorage, sequenceSize, ev, i, 0); // clear the sequence
+                }
+            }
+            setElement(m_midiStorage, sequenceSize, TRIG_ID, CC_ID, 1); // validate the sequence
+            loadFromStorage();
+            setSelectedSequence(sequenceSize);
+            updateGui();
+        }
         //[/UserButtonCode_addSequence]
     }
     else if (buttonThatWasClicked == deleteSequence)
     {
         //[UserButtonCode_deleteSequence] -- add your button handler code here..
-        getProcessor()->removeSequence();
-        int selectedSequence = getProcessor()->getSelectedSequence();
-        sequenceSelectorBox->clear();
-        for (unsigned seq = 0; seq < getProcessor()->getSequenceSize(); seq++) {
-            sequenceSelectorBox->addItem(String(seq + 1), seq + 1);
+        unsigned sequenceSize = m_midiSequenceList.size();
+        if (sequenceSize > 0) {
+            unsigned selectedSequence = getSelectedSequence();
+            m_midiSequenceList.erase(m_midiSequenceList.begin() + selectedSequence);
+            if (selectedSequence > 0) {
+                // rebuild the selector box
+                sequenceSelectorBox->clear();
+                for (int seq = 0; seq < m_midiSequenceList.size(); seq++) {
+                    sequenceSelectorBox->addItem(String(seq + 1), seq + 1);
+                }
+                setSelectedSequence(selectedSequence - 1);
+            } // select the previous sequence
+            else { sequenceSelectorBox->clear(); } // the list is now empty
+            saveToStorage();
+            updateGui();
         }
-        sequenceSelectorBox->setSelectedItemIndex(selectedSequence);
-        updateGui();
         //[/UserButtonCode_deleteSequence]
     }
 
@@ -966,19 +982,66 @@ void ScripterProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 
-void ScripterProcessorEditor::updateSelector()
+void ScripterProcessorEditor::setTextToWindow(String text)
 {
-    int selectedSequence = getProcessor()->getSelectedSequence();
+    textEditor->insertTextAtCaret(text);
+}
+void ScripterProcessorEditor::loadFromStorage() {
+    //textEditor->insertTextAtCaret(String("Load from storage called\n"));
+    m_midiSequenceList.clear();
+    unsigned selectedSequence = getSelectedSequence();
     sequenceSelectorBox->clear();
-    for (unsigned seq = 0; seq < getProcessor()->getSequenceSize(); seq++) {
-        sequenceSelectorBox->addItem(String(seq + 1), seq + 1);
+
+    for (int seq = 0; seq < MAX_SEQUENCES; seq++) {
+
+        if (getElement(m_midiStorage,seq, 0, 1) != 0) {
+            MidiSequence sequence;
+            for (int ev = 0 ; ev < MAX_EVENTS; ev++) {
+                    MidiEvent event(
+                        getElement(m_midiStorage, seq, ev, 0),
+                        getElement(m_midiStorage, seq, ev, 1),
+                        getElement(m_midiStorage, seq, ev, 2));
+                    sequence.emplace_back(event);
+            }
+            if (!sequence.empty()) { // a valid sequence
+                m_midiSequenceList.emplace_back(sequence);
+                sequenceSelectorBox->addItem(String(seq + 1), seq + 1);
+            }
+            else { // no more valid sequences
+                break;
+            }
+        }
     }
-    sequenceSelectorBox->setSelectedItemIndex(selectedSequence);
+
+    if (selectedSequence >= m_midiSequenceList.size()) {
+        selectedSequence = 0;
+    }
+    sequenceSelectorBox->setSelectedItemIndex(selectedSequence, NotificationType::sendNotification);
+    //textEditor->insertTextAtCaret(String("Load from storage done\n"));
+}
+
+void ScripterProcessorEditor::saveToStorage() {
+    //textEditor->insertTextAtCaret(String("Save to storage called\n"));
+    memset(m_midiStorage, 0, MAX_SEQUENCES * MAX_EVENTS * 3 * sizeof(int)); // clear the midi storage array
+
+    unsigned seqIdx = 0, evIdx = 0;
+    for (auto seq = m_midiSequenceList.begin(); seq != m_midiSequenceList.end(); ++seq) {
+        evIdx = 0;
+        for (auto ev = (*seq).begin(); ev != (*seq).end(); ++ev) {
+            setElement(m_midiStorage, seqIdx, evIdx, CH_ID, (*ev).channel);
+            setElement(m_midiStorage, seqIdx, evIdx,CC_ID, (*ev).cc);
+            setElement(m_midiStorage, seqIdx, evIdx, VAL_ID, (*ev).value);
+            evIdx++;
+        }
+        seqIdx++;
+    }
+
+    //textEditor->insertTextAtCaret(String("Save to storage done\n"));
 }
 
 void ScripterProcessorEditor::updateGui()
 {
-    if (getProcessor()->getSequenceSize() == 0) {
+    if (m_midiSequenceList.empty()) {
         triggerCh->setText(String("0"), NotificationType::sendNotification);
         triggerCC->setText(String("0"), NotificationType::sendNotification);
         triggerVal->setText(String("0"), NotificationType::sendNotification);
@@ -1024,75 +1087,75 @@ void ScripterProcessorEditor::updateGui()
         outputEvent9Val->setText(String("0"), NotificationType::sendNotification);
         return;
     }
-
+    int selectedSequence = getSelectedSequence();
     unsigned idx = TRIG_ID;
-    int selectedSequence = getProcessor()->getSelectedSequence();
-    MidiEvent event;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    triggerCh->setText(String(event.channel), NotificationType::sendNotification);
-    triggerCC->setText(String(event.cc), NotificationType::sendNotification);
-    triggerVal->setText(String(event.value), NotificationType::sendNotification);
+    triggerCh->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    triggerCC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    triggerVal->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent0Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent0CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent0Val->setText(String(event.value), NotificationType::sendNotification);
+    unsigned numEvents = m_midiSequenceList.at(selectedSequence).size();
+    //textEditor->insertTextAtCaret(String(String("Num events ") + String(numEvents) + String("\n")));
+
+    if (idx >= numEvents) { return; }
+    outputEvent0Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent0CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent0Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent1Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent1CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent1Val->setText(String(event.value), NotificationType::sendNotification);
+    if (idx >= numEvents) { return; }
+    outputEvent1Ch->setText( String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent1CC->setText( String(m_midiSequenceList.at(selectedSequence).at(idx).cc),      NotificationType::sendNotification);
+    outputEvent1Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value),   NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent2Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent2CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent2Val->setText(String(event.value), NotificationType::sendNotification);
+    if (idx >= numEvents) { return; }
+    outputEvent2Ch->setText( String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent2CC->setText( String(m_midiSequenceList.at(selectedSequence).at(idx).cc),      NotificationType::sendNotification);
+    outputEvent2Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent3Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent3CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent3Val->setText(String(event.value), NotificationType::sendNotification);
+    if (idx >= numEvents) { return; }
+    outputEvent3Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent3CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent3Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent4Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent4CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent4Val->setText(String(event.value), NotificationType::sendNotification);
+    if (idx >= numEvents) { return; }
+    outputEvent4Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent4CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent4Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent5Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent5CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent5Val->setText(String(event.value), NotificationType::sendNotification);
+    if (idx >= numEvents) { return; }
+    outputEvent5Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent5CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent5Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent6Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent6CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent6Val->setText(String(event.value), NotificationType::sendNotification);
+    if (idx >= numEvents) { return; }
+    outputEvent6Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent6CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent6Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent7Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent7CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent7Val->setText(String(event.value), NotificationType::sendNotification);
+    if (idx >= numEvents) { return; }
+    outputEvent7Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent7CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent7Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent8Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent8CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent8Val->setText(String(event.value), NotificationType::sendNotification);
+    if (idx >= numEvents) { return; }
+    outputEvent8Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent8CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent8Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
-    outputEvent9Ch->setText(String(event.channel), NotificationType::sendNotification);
-    outputEvent9CC->setText(String(event.cc), NotificationType::sendNotification);
-    outputEvent9Val->setText(String(event.value), NotificationType::sendNotification);
+    if (idx >= numEvents) { return; }
+    outputEvent9Ch->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).channel), NotificationType::sendNotification);
+    outputEvent9CC->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).cc), NotificationType::sendNotification);
+    outputEvent9Val->setText(String(m_midiSequenceList.at(selectedSequence).at(idx).value), NotificationType::sendNotification);
     idx++;
 }
 //[/MiscUserCode]
@@ -1109,11 +1172,12 @@ BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="ScripterProcessorEditor"
                  componentName="" parentClasses="public AudioProcessorEditor"
-                 constructorParams="AudioProcessor&amp; ownerFilter" variableInitialisers="AudioProcessorEditor(ownerFilter)"
-                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="0" initialWidth="600" initialHeight="400">
+                 constructorParams="AudioProcessor&amp; ownerFilter, int *midiStorage"
+                 variableInitialisers="AudioProcessorEditor(ownerFilter)" snapPixels="8"
+                 snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
+                 initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ff323e44">
-    <TEXT pos="28 20 236 30" fill="solid: ff00ffff" hasStroke="0" text="Blackaddr Audio MidiScripter 0.2.0"
+    <TEXT pos="28 20 236 30" fill="solid: ff00ffff" hasStroke="0" text="Blackaddr Audio MidiScripter 0.1.0"
           fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
           justification="36"/>
     <TEXT pos="244 108 28 30" fill="solid: fff0ffff" hasStroke="0" text="Ch."
