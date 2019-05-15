@@ -16,37 +16,42 @@
 //==============================================================================
 ScripterAudioProcessor::ScripterAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+    : AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+        .withInput("Input", AudioChannelSet::stereo(), true)
+#endif
+        .withOutput("Output", AudioChannelSet::stereo(), true)
+#endif
+    )
 #endif
 {
-    m_midiStorage = (int *)malloc(MAX_SEQUENCES*MAX_EVENTS * 3 * sizeof(int));
+    //m_midiStorage = (int *)malloc(MAX_SEQUENCES*MAX_EVENTS * 3 * sizeof(int));
+    m_midiSequenceList = new MidiSequenceList();
+    if (!m_midiSequenceList) {
+        throw std::exception("Failed to allocate m_midiSequenceList");
+    }
 
     unsigned count = 0;
     for (int seq = 0; seq < MAX_SEQUENCES; seq++) {
         for (int ev = 0; ev < MAX_EVENTS; ev++) {
             for (int i = 0; i < 3; i++) {
-                setElement(m_midiStorage, seq, ev, i, 0);
-
                 // Register the audio parameter
-                addParameter(paramArray[seq][ev][i] = new AudioParameterInt(String(count), "", 0, 127, 0));
+                addParameter(paramArray[seq][ev][i] = new AudioParameterInt(String(count), String(String("param") + String(count)), 0, 127, 0));
+                if (!paramArray[seq][ev][i]) {
+                    throw std::exception("Failed to allocate paramArray");
+                }
                 count++;
             }
         }
     }
+    loadFromStorage();
 }
 
 ScripterAudioProcessor::~ScripterAudioProcessor()
 {
-    if (m_midiStorage) { 
-        free(m_midiStorage); 
-        m_midiStorage = nullptr;
+    if (m_midiSequenceList) {
+        delete m_midiSequenceList;
     }
 }
 
@@ -157,20 +162,39 @@ void ScripterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
     int time;
     MidiMessage msg;
     MidiBuffer processedMidi;
+    ScripterProcessorEditor* editor = reinterpret_cast<ScripterProcessorEditor*>(m_editor);
 
     for (MidiBuffer::Iterator it(midiMessages); it.getNextEvent(msg, time);)
     {
-        {
-            MidiEvent eventOut (msg.getChannel(), msg.getControllerNumber(), msg.getControllerValue() );
-            MidiMessage msgOut = MidiMessage::controllerEvent(eventOut.channel, eventOut.cc + 10, eventOut.value);
-            processedMidi.addEvent(msgOut, time);
+        // If enabled, print all CC messages to the text window
+        if ( m_printAllCCEvents && msg.isController() && editor) {
+            editor->setWindowText(String(String("RECV:: Ch:") + String(msg.getChannel()) + String(" CC:") + String(msg.getControllerNumber()) + String(" Val:") + String(msg.getControllerValue()) + String("\n")));
         }
 
-        {
-            MidiEvent eventOut(msg.getChannel(), msg.getControllerNumber(), msg.getControllerValue());
-            MidiMessage msgOut = MidiMessage::controllerEvent(eventOut.channel, eventOut.cc + 11, eventOut.value);
-            processedMidi.addEvent(msgOut, time);
+        for (auto seq = m_midiSequenceList->begin(); seq != m_midiSequenceList->end(); ++seq) {
+
+            MidiEvent trigger = (*seq).at(TRIG_ID); // get the sequence trigger event
+
+            // Check if the MIDI message matches the trigger
+            if ((trigger.channel == msg.getChannel()) && (trigger.cc == msg.getControllerNumber()) && (trigger.value == msg.getControllerValue()) ) {
+                
+                if (editor) {
+                    editor->setWindowText(String(String("TRIG:: Ch:") + String(trigger.channel) + String(" CC:") + String(trigger.cc) + String(" Val:") + String(trigger.value) + String("\n")));
+                }
+
+                // Send each event starting after the trigger
+                for (auto ev = (*seq).begin() + 1; ev != (*seq).end(); ++ev) {
+                    if ((*ev).cc != 0) {
+                        if (editor) {
+                            editor->setWindowText(String(String("SEND:: Ch:") + String((*ev).channel) + String(" CC:") + String((*ev).cc) + String(" Val:") + String((*ev).value) + String("\n")));
+                        }
+                        MidiMessage msgOut = MidiMessage::controllerEvent((*ev).channel, (*ev).cc, (*ev).value);
+                        processedMidi.addEvent(msgOut, time);
+                    }
+                }
+            }
         }
+
     }
     midiMessages.clear();
     midiMessages.swapWith(processedMidi);
@@ -184,8 +208,8 @@ bool ScripterAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* ScripterAudioProcessor::createEditor()
 {
-    editor =  new ScripterProcessorEditor (*this, m_midiStorage);
-    return static_cast<AudioProcessorEditor*>(editor);
+    m_editor =  new ScripterProcessorEditor (*this);
+    return m_editor;
 }
 
 //==============================================================================
@@ -200,11 +224,8 @@ void ScripterAudioProcessor::getStateInformation (MemoryBlock& destData)
     for (int seq = 0; seq < MAX_SEQUENCES; seq++) {
         for (int ev = 0; ev < MAX_EVENTS; ev++) {
             for (int i = 0; i < 3; i++) {
-                int value = getElement(m_midiStorage, seq, ev, i);
+                int value = getElement(seq, ev, i);
                 stream.writeInt(value);
-                // It's necessary to mirror the AudioParameter array sync with the int array that stores
-                // the data due to he manner in which parameters are handled in VST.
-                *(paramArray[seq][ev][i]) = value;
             }
         }
     }
@@ -222,12 +243,126 @@ void ScripterAudioProcessor::setStateInformation (const void* data, int sizeInBy
         for (int ev = 0; ev < MAX_EVENTS; ev++) {
             for (int i = 0; i < 3; i++) {
                 int value = stream.readInt();
-                setElement(m_midiStorage, seq, ev, i, value);
-                // It's necessary to mirror the AudioParameter array sync with the int array that stores
-                // the data due to he manner in which parameters are handled in VST.
-                *(paramArray[seq][ev][i]) = value;
+                setElementLocal(seq, ev, i, value);
             }
         }
+    }
+    loadFromStorage();
+    m_selectedSequence = 0;
+}
+
+void ScripterAudioProcessor::setElement(int seq, int ev, int word, int value)
+{
+    AudioParameterInt *param = paramArray[seq][ev][word];
+    if (param) {
+        *param = value;
+        loadFromStorage();
+    }
+}
+int  ScripterAudioProcessor::getElement(int seq, int ev, int word)
+{
+    AudioParameterInt *param = paramArray[seq][ev][word];
+    if (param) {
+        int value = *param;
+        return value;
+    }
+    else {
+        return 0;
+    }
+}
+
+void ScripterAudioProcessor::setElementLocal(int seq, int ev, int word, int value)
+{
+    AudioParameterInt *param = paramArray[seq][ev][word];
+    if (param) {
+        *param = value;
+    }
+}
+
+void ScripterAudioProcessor::clearElements()
+{
+    for (int seq = 0; seq < MAX_SEQUENCES; seq++) {
+        for (int ev = 0; ev < MAX_EVENTS; ev++) {
+            for (int i = 0; i < 3; i++) {
+                setElementLocal(seq, ev, i, 0);
+            }
+        }
+    }
+
+}
+
+void ScripterAudioProcessor::addSequence()
+{
+    unsigned sequenceSize = getSequenceSize();
+    if (sequenceSize < MAX_SEQUENCES) {
+        // there is room to add another sequence
+        // To validate sequence set the CC_ID for it's TRIG_ID to non-zero.
+        for (int ev = 0; ev < MAX_EVENTS; ev++) {
+            for (int i = 0; i < 3; i++) {
+                setElementLocal(sequenceSize, ev, i, 0); // clear the sequence
+            }
+        }
+        setElementLocal(sequenceSize, TRIG_ID, CC_ID, 1); // validate the sequence
+        loadFromStorage();
+        setSelectedSequence(sequenceSize);
+    }
+}
+
+void ScripterAudioProcessor::removeSequence() {
+    //int selectedSequence = getSelectedSequence();
+    unsigned sequenceSize = getSequenceSize();
+    if (sequenceSize > 0) {
+        unsigned selectedSequence = getSelectedSequence();
+        m_midiSequenceList->erase(m_midiSequenceList->begin() + selectedSequence);
+        if (selectedSequence > 0) {
+            setSelectedSequence(selectedSequence - 1);
+        } // select the previous sequence
+        saveToStorage();
+    }
+}
+
+void ScripterAudioProcessor::loadFromStorage() {
+    m_midiSequenceList->clear();
+    unsigned selectedSequence = getSelectedSequence();
+
+    for (int seq = 0; seq < MAX_SEQUENCES; seq++) {
+
+        //if (getElement(seq, 0, 1) != 0) {
+            MidiSequence sequence;
+            for (int ev = 0; ev < MAX_EVENTS; ev++) {
+                MidiEvent event(
+                    getElement(seq, ev, 0),
+                    getElement(seq, ev, 1),
+                    getElement(seq, ev, 2));
+                sequence.push_back(event);
+            }
+            if (!sequence.empty()) { // a valid sequence
+                m_midiSequenceList->push_back(sequence);
+            }
+            else { // no more valid sequences
+                break;
+            }
+        //}
+    }
+
+    if (selectedSequence >= m_midiSequenceList->size()) {
+        selectedSequence = 0;
+    }
+}
+
+void ScripterAudioProcessor::saveToStorage() {
+    clearElements();
+
+    unsigned seqIdx = 0, evIdx = 0;
+    for (auto seq = m_midiSequenceList->begin(); seq != m_midiSequenceList->end(); ++seq) {
+        evIdx = 0;
+        for (auto ev = (*seq).begin(); ev != (*seq).end(); ++ev) {
+            setElementLocal(seqIdx, evIdx, CH_ID, (*ev).channel);
+            setElementLocal(seqIdx, evIdx, CC_ID, (*ev).cc);
+            setElementLocal(seqIdx, evIdx, VAL_ID, (*ev).value);
+            evIdx++;
+        }
+        seqIdx++;
     }
 }
 

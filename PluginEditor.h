@@ -23,7 +23,6 @@
 #include <array>
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Misc.h"
-#include "PluginProcessor.h"
 //[/Headers]
 
 
@@ -43,25 +42,14 @@ class ScripterProcessorEditor  : public AudioProcessorEditor,
 {
 public:
     //==============================================================================
-    ScripterProcessorEditor (AudioProcessor& ownerFilter);
+    ScripterProcessorEditor (AudioProcessor& ownerFilter, int *midiStorage);
     ~ScripterProcessorEditor();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    ScripterAudioProcessor* getProcessor() const
-    {
-        return static_cast <ScripterAudioProcessor*>(getAudioProcessor());
-    }
-
-    //int getSelectorSequence() { return sequenceSelectorBox->getSelectedItemIndex(); }
-    //void setSelectorSequence(int index) { sequenceSelectorBox->setSelectedItemIndex(index, NotificationType::sendNotification); }
-    void setWindowText(String text) {
-        if (textEditor) {
-            textEditor->insertTextAtCaret(text);
-        }
-    }
-    void updateSelector();
-    void updateGui();
+    void loadFromStorage();
+    void saveToStorage();
+    void setTextToWindow(String text);
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -74,7 +62,13 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    MidiSequenceList m_midiSequenceList;
+    int *m_midiStorage = nullptr;
+    //ScopedPointer<Label> m_labelPointers[MAX_EVENTS][3];
 
+    int getSelectedSequence() { return sequenceSelectorBox->getSelectedItemIndex(); }
+    void setSelectedSequence(int index) { sequenceSelectorBox->setSelectedItemIndex(index, NotificationType::sendNotification); }
+    void updateGui();
 
     //[/UserVariables]
 
