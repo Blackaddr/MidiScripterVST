@@ -53,8 +53,6 @@ public:
         return static_cast <ScripterAudioProcessor*>(getAudioProcessor());
     }
 
-    //int getSelectorSequence() { return sequenceSelectorBox->getSelectedItemIndex(); }
-    //void setSelectorSequence(int index) { sequenceSelectorBox->setSelectedItemIndex(index, NotificationType::sendNotification); }
     void setWindowText(String text) {
         if (textEditor) {
             textEditor->insertTextAtCaret(text);
@@ -74,7 +72,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-
+    ScripterAudioProcessor *m_ourProcessor = nullptr;
 
     //[/UserVariables]
 

@@ -12,6 +12,17 @@
 #include "PluginEditor.h"
 #include "Misc.h"
 
+using std::endl;
+
+const String LOG_FILENAME = "log.txt";
+
+// #define USE_LOG_FILE
+
+void ScripterAudioProcessor::writeLog(String str) {
+    logFile.open(LOG_FILENAME.toUTF8(), std::ios_base::out | std::ios_base::app);
+    logFile << m_lineNumber++ << ": " << str << endl;
+    logFile.close();
+}
 
 //==============================================================================
 ScripterAudioProcessor::ScripterAudioProcessor()
@@ -26,11 +37,16 @@ ScripterAudioProcessor::ScripterAudioProcessor()
     )
 #endif
 {
-    //m_midiStorage = (int *)malloc(MAX_SEQUENCES*MAX_EVENTS * 3 * sizeof(int));
     m_midiSequenceList = new MidiSequenceList();
     if (!m_midiSequenceList) {
         throw std::exception("Failed to allocate m_midiSequenceList");
     }
+
+#ifdef USE_LOG_FILE
+    // Reset the log file
+    logFile.open(LOG_FILENAME.toUTF8());
+    logFile.close();
+#endif
 
     unsigned count = 0;
     for (int seq = 0; seq < MAX_SEQUENCES; seq++) {
@@ -163,11 +179,12 @@ void ScripterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
     MidiMessage msg;
     MidiBuffer processedMidi;
     ScripterProcessorEditor* editor = reinterpret_cast<ScripterProcessorEditor*>(m_editor);
+    bool validEditor = (editor && m_hasValidEditor) ? true : false;
 
     for (MidiBuffer::Iterator it(midiMessages); it.getNextEvent(msg, time);)
     {
         // If enabled, print all CC messages to the text window
-        if ( m_printAllCCEvents && msg.isController() && editor) {
+        if ( m_printAllCCEvents && msg.isController() && validEditor) {
             editor->setWindowText(String(String("RECV:: Ch:") + String(msg.getChannel()) + String(" CC:") + String(msg.getControllerNumber()) + String(" Val:") + String(msg.getControllerValue()) + String("\n")));
         }
 
@@ -178,14 +195,14 @@ void ScripterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
             // Check if the MIDI message matches the trigger
             if ((trigger.channel == msg.getChannel()) && (trigger.cc == msg.getControllerNumber()) && (trigger.value == msg.getControllerValue()) ) {
                 
-                if (editor) {
+                if (validEditor) {
                     editor->setWindowText(String(String("TRIG:: Ch:") + String(trigger.channel) + String(" CC:") + String(trigger.cc) + String(" Val:") + String(trigger.value) + String("\n")));
                 }
 
                 // Send each event starting after the trigger
                 for (auto ev = (*seq).begin() + 1; ev != (*seq).end(); ++ev) {
                     if ((*ev).cc != 0) {
-                        if (editor) {
+                        if (validEditor) {
                             editor->setWindowText(String(String("SEND:: Ch:") + String((*ev).channel) + String(" CC:") + String((*ev).cc) + String(" Val:") + String((*ev).value) + String("\n")));
                         }
                         MidiMessage msgOut = MidiMessage::controllerEvent((*ev).channel, (*ev).cc, (*ev).value);
@@ -236,7 +253,6 @@ void ScripterAudioProcessor::setStateInformation (const void* data, int sizeInBy
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
-
     MemoryInputStream stream(data, static_cast<size_t> (sizeInBytes), false);
 
     for (int seq = 0; seq < MAX_SEQUENCES; seq++) {
@@ -249,6 +265,10 @@ void ScripterAudioProcessor::setStateInformation (const void* data, int sizeInBy
     }
     loadFromStorage();
     m_selectedSequence = 0;
+    if (m_hasValidEditor) {
+        ScripterProcessorEditor* editor = reinterpret_cast<ScripterProcessorEditor*>(m_editor);
+        editor->updateSelector();
+    }
 }
 
 void ScripterAudioProcessor::setElement(int seq, int ev, int word, int value)
@@ -323,11 +343,13 @@ void ScripterAudioProcessor::removeSequence() {
 
 void ScripterAudioProcessor::loadFromStorage() {
     m_midiSequenceList->clear();
+    m_midiSequenceList->reserve(MAX_SEQUENCES);
+
     unsigned selectedSequence = getSelectedSequence();
 
     for (int seq = 0; seq < MAX_SEQUENCES; seq++) {
 
-        //if (getElement(seq, 0, 1) != 0) {
+        if (getElement(seq, 0, 1) != 0) {
             MidiSequence sequence;
             for (int ev = 0; ev < MAX_EVENTS; ev++) {
                 MidiEvent event(
@@ -342,7 +364,7 @@ void ScripterAudioProcessor::loadFromStorage() {
             else { // no more valid sequences
                 break;
             }
-        //}
+        }
     }
 
     if (selectedSequence >= m_midiSequenceList->size()) {

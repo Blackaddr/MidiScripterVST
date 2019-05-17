@@ -447,8 +447,13 @@ ScripterProcessorEditor::ScripterProcessorEditor (AudioProcessor& ownerFilter)
 
 
     //[Constructor] You can add your own custom stuff here..
+    m_ourProcessor = getProcessor(); // keep a handy pointer to the associated processor
     updateSelector();
     updateGui();
+    
+    if (m_ourProcessor) {
+        m_ourProcessor->setValidEditor(true); // notify the prcoessor the editor is now valid
+    }
     //[/Constructor]
 }
 
@@ -507,6 +512,9 @@ ScripterProcessorEditor::~ScripterProcessorEditor()
 
 
     //[Destructor]. You can add your own custom destruction code here..
+    if (m_ourProcessor) {
+        m_ourProcessor->setValidEditor(false);
+    }
     //[/Destructor]
 }
 
@@ -701,206 +709,205 @@ void ScripterProcessorEditor::resized()
 void ScripterProcessorEditor::labelTextChanged (Label* labelThatHasChanged)
 {
     //[UserlabelTextChanged_Pre]
-    ScripterAudioProcessor* ourProcessor = getProcessor();
-    if (getProcessor()->getSequenceSize() == 0) { return; }
+    if (m_ourProcessor->getSequenceSize() == 0) { return; }
     //[/UserlabelTextChanged_Pre]
 
     if (labelThatHasChanged == triggerCh)
     {
         //[UserLabelCode_triggerCh] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_triggerCh]
     }
     else if (labelThatHasChanged == triggerCC)
     {
         //[UserLabelCode_triggerCC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_triggerCC]
     }
     else if (labelThatHasChanged == triggerVal)
     {
         //[UserLabelCode_triggerVal] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_triggerVal]
     }
     else if (labelThatHasChanged == outputEvent0Ch)
     {
         //[UserLabelCode_outputEvent0Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID+1, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID+1, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent0Ch]
     }
     else if (labelThatHasChanged == outputEvent0CC)
     {
         //[UserLabelCode_outputEvent0CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 1, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 1, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent0CC]
     }
     else if (labelThatHasChanged == outputEvent0Val)
     {
         //[UserLabelCode_outputEvent0Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 1, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 1, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent0Val]
     }
     else if (labelThatHasChanged == outputEvent1Ch)
     {
         //[UserLabelCode_outputEvent1Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 2, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 2, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent1Ch]
     }
     else if (labelThatHasChanged == outputEvent1CC)
     {
         //[UserLabelCode_outputEvent1CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 2, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 2, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent1CC]
     }
     else if (labelThatHasChanged == outputEvent1Val)
     {
         //[UserLabelCode_outputEvent1Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 2, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 2, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent1Val]
     }
     else if (labelThatHasChanged == outputEvent2Ch)
     {
         //[UserLabelCode_outputEvent2Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 3, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 3, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent2Ch]
     }
     else if (labelThatHasChanged == outputEvent2CC)
     {
         //[UserLabelCode_outputEvent2CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 3, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 3, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent2CC]
     }
     else if (labelThatHasChanged == outputEvent2Val)
     {
         //[UserLabelCode_outputEvent2Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 3, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 3, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent2Val]
     }
     else if (labelThatHasChanged == outputEvent3Ch)
     {
         //[UserLabelCode_outputEvent3Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 4, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 4, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent3Ch]
     }
     else if (labelThatHasChanged == outputEvent3CC)
     {
         //[UserLabelCode_outputEvent3CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 4, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 4, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent3CC]
     }
     else if (labelThatHasChanged == outputEvent3Val)
     {
         //[UserLabelCode_outputEvent3Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 4, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 4, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent3Val]
     }
     else if (labelThatHasChanged == outputEvent4Ch)
     {
         //[UserLabelCode_outputEvent4Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 5, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 5, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent4Ch]
     }
     else if (labelThatHasChanged == outputEvent4CC)
     {
         //[UserLabelCode_outputEvent4CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 5, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 5, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent4CC]
     }
     else if (labelThatHasChanged == outputEvent4Val)
     {
         //[UserLabelCode_outputEvent4Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 5, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 5, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent4Val]
     }
     else if (labelThatHasChanged == outputEvent5Ch)
     {
         //[UserLabelCode_outputEvent5Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 6, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 6, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent5Ch]
     }
     else if (labelThatHasChanged == outputEvent5CC)
     {
         //[UserLabelCode_outputEvent5CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 6, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 6, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent5CC]
     }
     else if (labelThatHasChanged == outputEvent5Val)
     {
         //[UserLabelCode_outputEvent5Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 6, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 6, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent5Val]
     }
     else if (labelThatHasChanged == outputEvent6Ch)
     {
         //[UserLabelCode_outputEvent6Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 7, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 7, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent6Ch]
     }
     else if (labelThatHasChanged == outputEvent6CC)
     {
         //[UserLabelCode_outputEvent6CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 7, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 7, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent6CC]
     }
     else if (labelThatHasChanged == outputEvent6Val)
     {
         //[UserLabelCode_outputEvent6Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 7, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 7, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent6Val]
     }
     else if (labelThatHasChanged == outputEvent7Ch)
     {
         //[UserLabelCode_outputEvent7Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 8, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 8, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent7Ch]
     }
     else if (labelThatHasChanged == outputEvent7CC)
     {
         //[UserLabelCode_outputEvent7CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 8, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 8, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent7CC]
     }
     else if (labelThatHasChanged == outputEvent7Val)
     {
         //[UserLabelCode_outputEvent7Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 8, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 8, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent7Val]
     }
     else if (labelThatHasChanged == outputEvent8Ch)
     {
         //[UserLabelCode_outputEvent8Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 9, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 9, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent8Ch]
     }
     else if (labelThatHasChanged == outputEvent8CC)
     {
         //[UserLabelCode_outputEvent8CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 9, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 9, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent8CC]
     }
     else if (labelThatHasChanged == outputEvent8Val)
     {
         //[UserLabelCode_outputEvent8Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 9, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 9, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent8Val]
     }
     else if (labelThatHasChanged == outputEvent9Ch)
     {
         //[UserLabelCode_outputEvent9Ch] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 10, CH_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 10, CH_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent9Ch]
     }
     else if (labelThatHasChanged == outputEvent9CC)
     {
         //[UserLabelCode_outputEvent9CC] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 10, CC_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 10, CC_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent9CC]
     }
     else if (labelThatHasChanged == outputEvent9Val)
     {
         //[UserLabelCode_outputEvent9Val] -- add your label text handling code here..
-        ourProcessor->setElement(ourProcessor->getSelectedSequence(), TRIG_ID + 10, VAL_ID, labelThatHasChanged->getText().getIntValue());
+        m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 10, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent9Val]
     }
 
@@ -912,15 +919,14 @@ void ScripterProcessorEditor::labelTextChanged (Label* labelThatHasChanged)
 void ScripterProcessorEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 {
     //[UsercomboBoxChanged_Pre]
-    if (getProcessor()->getSequenceSize() == 0) { return; }
+    if (m_ourProcessor->getSequenceSize() == 0) { return; }
     //[/UsercomboBoxChanged_Pre]
 
     if (comboBoxThatHasChanged == sequenceSelectorBox)
     {
         //[UserComboBoxCode_sequenceSelectorBox] -- add your combo box handling code here..
-
         int selectedSequence = comboBoxThatHasChanged->getSelectedItemIndex();
-        getProcessor()->setSelectedSequence(selectedSequence);
+        m_ourProcessor->setSelectedSequence(selectedSequence);
         updateGui();
         //[/UserComboBoxCode_sequenceSelectorBox]
     }
@@ -937,20 +943,20 @@ void ScripterProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == addSequence)
     {
         //[UserButtonCode_addSequence] -- add your button handler code here..
-        getProcessor()->addSequence();
-        int sequenceSize = getProcessor()->getSequenceSize();
+        m_ourProcessor->addSequence();
+        int sequenceSize = m_ourProcessor->getSequenceSize();
         sequenceSelectorBox->addItem(String(sequenceSize), sequenceSize);
-        sequenceSelectorBox->setSelectedItemIndex(getProcessor()->getSelectedSequence());
+        sequenceSelectorBox->setSelectedItemIndex(m_ourProcessor->getSelectedSequence());
         updateGui();
         //[/UserButtonCode_addSequence]
     }
     else if (buttonThatWasClicked == deleteSequence)
     {
         //[UserButtonCode_deleteSequence] -- add your button handler code here..
-        getProcessor()->removeSequence();
-        int selectedSequence = getProcessor()->getSelectedSequence();
+        m_ourProcessor->removeSequence();
+        int selectedSequence = m_ourProcessor->getSelectedSequence();
         sequenceSelectorBox->clear();
-        for (unsigned seq = 0; seq < getProcessor()->getSequenceSize(); seq++) {
+        for (unsigned seq = 0; seq < m_ourProcessor->getSequenceSize(); seq++) {
             sequenceSelectorBox->addItem(String(seq + 1), seq + 1);
         }
         sequenceSelectorBox->setSelectedItemIndex(selectedSequence);
@@ -968,9 +974,14 @@ void ScripterProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 
 void ScripterProcessorEditor::updateSelector()
 {
-    int selectedSequence = getProcessor()->getSelectedSequence();
+    if (!m_ourProcessor) { return; }
+    if (!sequenceSelectorBox) {
+        return;
+    }
+
+    int selectedSequence = m_ourProcessor->getSelectedSequence();
     sequenceSelectorBox->clear();
-    for (unsigned seq = 0; seq < getProcessor()->getSequenceSize(); seq++) {
+    for (unsigned seq = 0; seq < m_ourProcessor->getSequenceSize(); seq++) {
         sequenceSelectorBox->addItem(String(seq + 1), seq + 1);
     }
     sequenceSelectorBox->setSelectedItemIndex(selectedSequence);
@@ -978,7 +989,9 @@ void ScripterProcessorEditor::updateSelector()
 
 void ScripterProcessorEditor::updateGui()
 {
-    if (getProcessor()->getSequenceSize() == 0) {
+    if (!m_ourProcessor) { return; }
+
+    if (m_ourProcessor->getSequenceSize() == 0) {
         triggerCh->setText(String("0"), NotificationType::sendNotification);
         triggerCC->setText(String("0"), NotificationType::sendNotification);
         triggerVal->setText(String("0"), NotificationType::sendNotification);
@@ -1026,70 +1039,70 @@ void ScripterProcessorEditor::updateGui()
     }
 
     unsigned idx = TRIG_ID;
-    int selectedSequence = getProcessor()->getSelectedSequence();
+    int selectedSequence = m_ourProcessor->getSelectedSequence();
     MidiEvent event;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     triggerCh->setText(String(event.channel), NotificationType::sendNotification);
     triggerCC->setText(String(event.cc), NotificationType::sendNotification);
     triggerVal->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent0Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent0CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent0Val->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent1Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent1CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent1Val->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent2Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent2CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent2Val->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent3Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent3CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent3Val->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent4Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent4CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent4Val->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent5Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent5CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent5Val->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent6Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent6CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent6Val->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent7Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent7CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent7Val->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent8Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent8CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent8Val->setText(String(event.value), NotificationType::sendNotification);
     idx++;
 
-    event = getProcessor()->getEvent(selectedSequence, idx);
+    event = m_ourProcessor->getEvent(selectedSequence, idx);
     outputEvent9Ch->setText(String(event.channel), NotificationType::sendNotification);
     outputEvent9CC->setText(String(event.cc), NotificationType::sendNotification);
     outputEvent9Val->setText(String(event.value), NotificationType::sendNotification);

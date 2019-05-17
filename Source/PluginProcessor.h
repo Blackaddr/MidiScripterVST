@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <iostream>
+#include <fstream>
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Misc.h"
 
@@ -70,6 +72,9 @@ public:
     void saveToStorage();
     MidiEvent getEvent(int seq, int ev) { return m_midiSequenceList->at(seq).at(ev); }
 
+    void setValidEditor(bool isValid) { m_hasValidEditor = isValid;  }
+    void writeLog(String str);
+
 private:
     //==============================================================================
     //ScripterProcessorEditor *editor = nullptr;
@@ -79,6 +84,10 @@ private:
     void setElementLocal(int seq, int ev, int word, int value);
     AudioProcessorEditor* m_editor = nullptr;
     bool m_printAllCCEvents = true;
+    std::ofstream logFile;
+    
+    bool m_hasValidEditor = false;
+    unsigned m_lineNumber = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ScripterAudioProcessor)
     
