@@ -7,7 +7,7 @@ As you read this, you may start thinking, "Why don't you just use presets?" Well
 ## Okay, let's make a plugin!
 I needed a basic pluggin to make it a little easier to reconfigure a large number of VSTs running in my VST host when playing live. Sure, it's easy to configure multiple effects to turn on or off with only one press of a stomp switch on my MIDI Foot Controller.  But what happens if I want to also set some "knob" type parameters to different values that aren't on/off? I needed to write a SEQUENCE of MIDI CC messages that get TRIGGERED by a single incoming MIDI CC event.
 
-![Default screen](https://github.com/blackaddr/MidiScripterVST/blob/master/MidiScripter.png)
+![Default screen](https://github.com/blackaddr/MidiScripterVST/blob/master/MidiScripter.png#1)
 
 The plugin works by letting define up to 10 unique SEQUENCES, each with up to 10 output MIDI events per sequence. Here's an example sequence to illustrate:
 
