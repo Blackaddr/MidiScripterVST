@@ -178,15 +178,29 @@ void ScripterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
     int time;
     MidiMessage msg;
     MidiBuffer processedMidi;
-    ScripterProcessorEditor* editor = reinterpret_cast<ScripterProcessorEditor*>(m_editor);
-    bool validEditor = (editor && m_hasValidEditor) ? true : false;
+    bool printAllCCEvents = false;
+    bool printTriggeredEvents = false;
+    ScripterProcessorEditor* editor = nullptr;
+
+    if (m_printAllCCEvents || m_printTriggedEvents) {
+        // check if editor is valid
+        editor = reinterpret_cast<ScripterProcessorEditor*>(m_editor);
+        bool validEditor = (editor && m_hasValidEditor) ? true : false;
+
+        printAllCCEvents     = m_printAllCCEvents && validEditor;
+        printTriggeredEvents = m_printTriggedEvents && validEditor;
+    }
 
     for (MidiBuffer::Iterator it(midiMessages); it.getNextEvent(msg, time);)
     {
         // If enabled, print all CC messages to the text window
-        if ( m_printAllCCEvents && msg.isController() && validEditor) {
-            editor->setWindowText(String(String("RECV:: Ch:") + String(msg.getChannel()) + String(" CC:") + String(msg.getControllerNumber()) + String(" Val:") + String(msg.getControllerValue()) + String("\n")));
+        if (printAllCCEvents) {
+            if (msg.isController()) {
+                editor->setWindowText(String(String("RECV:: Ch:") + String(msg.getChannel()) + String(" CC:") + String(msg.getControllerNumber()) + String(" Val:") + String(msg.getControllerValue()) + String("\n")));
+            }
         }
+
+        
 
         for (auto seq = m_midiSequenceList->begin(); seq != m_midiSequenceList->end(); ++seq) {
 
@@ -195,14 +209,14 @@ void ScripterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
             // Check if the MIDI message matches the trigger
             if ((trigger.channel == msg.getChannel()) && (trigger.cc == msg.getControllerNumber()) && (trigger.value == msg.getControllerValue()) ) {
                 
-                if (validEditor) {
+                if (printTriggeredEvents) {
                     editor->setWindowText(String(String("TRIG:: Ch:") + String(trigger.channel) + String(" CC:") + String(trigger.cc) + String(" Val:") + String(trigger.value) + String("\n")));
                 }
 
                 // Send each event starting after the trigger
                 for (auto ev = (*seq).begin() + 1; ev != (*seq).end(); ++ev) {
                     if ((*ev).cc != 0) {
-                        if (validEditor) {
+                        if (printTriggeredEvents) {
                             editor->setWindowText(String(String("SEND:: Ch:") + String((*ev).channel) + String(" CC:") + String((*ev).cc) + String(" Val:") + String((*ev).value) + String("\n")));
                         }
                         MidiMessage msgOut = MidiMessage::controllerEvent((*ev).channel, (*ev).cc, (*ev).value);
@@ -323,6 +337,22 @@ void ScripterAudioProcessor::addSequence()
             }
         }
         setElementLocal(sequenceSize, TRIG_ID, CC_ID, 1); // validate the sequence
+        loadFromStorage();
+        setSelectedSequence(sequenceSize);
+    }
+}
+
+void ScripterAudioProcessor::copySelectedSequence()
+{
+    unsigned sequenceSize = getSequenceSize();
+    if (sequenceSize < MAX_SEQUENCES) {
+        // there is room to add another sequence
+        // To validate sequence set the CC_ID for it's TRIG_ID to non-zero.
+        for (int ev = 0; ev < MAX_EVENTS; ev++) {
+            for (int i = 0; i < 3; i++) {
+                setElementLocal(sequenceSize, ev, i, getElement(m_selectedSequence, ev, i)); // clear the sequence
+            }
+        }
         loadFromStorage();
         setSelectedSequence(sequenceSize);
     }

@@ -13,6 +13,8 @@
 #include <vector>
 #include "../JuceLibraryCode/JuceHeader.h"
 
+const String VERSION_STRING = "1.0.0";
+
 constexpr unsigned MAX_SEQUENCES = 10;
 constexpr unsigned MAX_EVENTS = 11;
 

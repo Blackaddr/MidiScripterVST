@@ -439,18 +439,50 @@ ScripterProcessorEditor::ScripterProcessorEditor (AudioProcessor& ownerFilter)
     deleteSequence->setColour (TextButton::buttonColourId, Colours::red);
     deleteSequence->setColour (TextButton::textColourOffId, Colours::black);
 
+    addAndMakeVisible (printAllEventsButton = new ToggleButton ("printAllEventsEnable"));
+    printAllEventsButton->setButtonText (TRANS("Print All CC Events"));
+    printAllEventsButton->addListener (this);
+
+    addAndMakeVisible (printTriggeredEventsButton = new ToggleButton ("printTriggeredEventsEnable"));
+    printTriggeredEventsButton->setButtonText (TRANS("Print Triggered Events"));
+    printTriggeredEventsButton->addListener (this);
+
+    addAndMakeVisible (copySequence = new TextButton ("copy sequence"));
+    copySequence->setButtonText (TRANS("COPY"));
+    copySequence->addListener (this);
+    copySequence->setColour (TextButton::buttonColourId, Colours::aqua);
+    copySequence->setColour (TextButton::textColourOffId, Colours::black);
+
+    addAndMakeVisible (clearText = new TextButton ("clear text"));
+    clearText->setButtonText (TRANS("CLEAR"));
+    clearText->addListener (this);
+    clearText->setColour (TextButton::buttonColourId, Colours::white);
+    clearText->setColour (TextButton::textColourOffId, Colours::black);
+
+    addAndMakeVisible (versionLabel = new Label ("version",
+                                                 TRANS("X.X.X")));
+    versionLabel->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    versionLabel->setJustificationType (Justification::centredLeft);
+    versionLabel->setEditable (true, true, false);
+    versionLabel->setColour (Label::textColourId, Colours::aqua);
+    versionLabel->setColour (TextEditor::textColourId, Colours::black);
+    versionLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    versionLabel->addListener (this);
+
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (600, 420);
 
 
     //[Constructor] You can add your own custom stuff here..
+    versionLabel->setText(VERSION_STRING, NotificationType::dontSendNotification);
+    setWindowText(String(String("MidiScripter version ") + VERSION_STRING));
     m_ourProcessor = getProcessor(); // keep a handy pointer to the associated processor
     updateSelector();
     updateGui();
-    
+
     if (m_ourProcessor) {
         m_ourProcessor->setValidEditor(true); // notify the prcoessor the editor is now valid
     }
@@ -509,6 +541,11 @@ ScripterProcessorEditor::~ScripterProcessorEditor()
     outputEvent9Val = nullptr;
     label17 = nullptr;
     deleteSequence = nullptr;
+    printAllEventsButton = nullptr;
+    printTriggeredEventsButton = nullptr;
+    copySequence = nullptr;
+    clearText = nullptr;
+    versionLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -527,15 +564,15 @@ void ScripterProcessorEditor::paint (Graphics& g)
     g.fillAll (Colour (0xff323e44));
 
     {
-        int x = 28, y = 20, width = 236, height = 30;
-        String text (TRANS("Blackaddr Audio MidiScripter 0.2.0"));
+        int x = 28, y = 20, width = 180, height = 30;
+        String text (TRANS("Blackaddr Audio MidiScripter"));
         Colour fillColour = Colours::aqua;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
         g.setColour (fillColour);
         g.setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
         g.drawText (text, x, y, width, height,
-                    Justification::centred, true);
+                    Justification::centredLeft, true);
     }
 
     {
@@ -667,8 +704,8 @@ void ScripterProcessorEditor::resized()
     outputEvent1CC->setBounds (299, 143, 32, 24);
     outputEvent1Val->setBounds (299, 175, 32, 24);
     label7->setBounds (299, 87, 32, 24);
-    textEditor->setBounds (24, 224, 424, 152);
-    addSequence->setBounds (24, 176, 64, 24);
+    textEditor->setBounds (18, 251, 424, 152);
+    addSequence->setBounds (24, 184, 48, 24);
     outputEvent2Ch->setBounds (332, 111, 32, 24);
     outputEvent2CC->setBounds (332, 144, 32, 24);
     outputEvent2Val->setBounds (332, 175, 32, 24);
@@ -701,7 +738,12 @@ void ScripterProcessorEditor::resized()
     outputEvent9CC->setBounds (559, 143, 32, 24);
     outputEvent9Val->setBounds (559, 175, 32, 24);
     label17->setBounds (559, 84, 32, 24);
-    deleteSequence->setBounds (104, 176, 64, 24);
+    deleteSequence->setBounds (165, 184, 53, 24);
+    printAllEventsButton->setBounds (24, 216, 152, 24);
+    printTriggeredEventsButton->setBounds (192, 216, 176, 24);
+    copySequence->setBounds (95, 184, 48, 24);
+    clearText->setBounds (388, 214, 48, 24);
+    versionLabel->setBounds (211, 23, 56, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -910,6 +952,11 @@ void ScripterProcessorEditor::labelTextChanged (Label* labelThatHasChanged)
         m_ourProcessor->setElement(m_ourProcessor->getSelectedSequence(), TRIG_ID + 10, VAL_ID, labelThatHasChanged->getText().getIntValue());
         //[/UserLabelCode_outputEvent9Val]
     }
+    else if (labelThatHasChanged == versionLabel)
+    {
+        //[UserLabelCode_versionLabel] -- add your label text handling code here..
+        //[/UserLabelCode_versionLabel]
+    }
 
     //[UserlabelTextChanged_Post]
     updateGui();
@@ -962,6 +1009,34 @@ void ScripterProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
         sequenceSelectorBox->setSelectedItemIndex(selectedSequence);
         updateGui();
         //[/UserButtonCode_deleteSequence]
+    }
+    else if (buttonThatWasClicked == printAllEventsButton)
+    {
+        //[UserButtonCode_printAllEventsButton] -- add your button handler code here..
+        m_ourProcessor->setPrintAllCCEvents(buttonThatWasClicked->getToggleState());
+        //[/UserButtonCode_printAllEventsButton]
+    }
+    else if (buttonThatWasClicked == printTriggeredEventsButton)
+    {
+        //[UserButtonCode_printTriggeredEventsButton] -- add your button handler code here..
+        m_ourProcessor->setPrintTriggeredEvents(buttonThatWasClicked->getToggleState());
+        //[/UserButtonCode_printTriggeredEventsButton]
+    }
+    else if (buttonThatWasClicked == copySequence)
+    {
+        //[UserButtonCode_copySequence] -- add your button handler code here..
+        m_ourProcessor->copySelectedSequence();
+        int sequenceSize = m_ourProcessor->getSequenceSize();
+        sequenceSelectorBox->addItem(String(sequenceSize), sequenceSize);
+        sequenceSelectorBox->setSelectedItemIndex(m_ourProcessor->getSelectedSequence());
+        updateGui();
+        //[/UserButtonCode_copySequence]
+    }
+    else if (buttonThatWasClicked == clearText)
+    {
+        //[UserButtonCode_clearText] -- add your button handler code here..
+        textEditor->setText("", true);
+        //[/UserButtonCode_clearText]
     }
 
     //[UserbuttonClicked_Post]
@@ -1126,9 +1201,9 @@ BEGIN_JUCER_METADATA
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="0" initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ff323e44">
-    <TEXT pos="28 20 236 30" fill="solid: ff00ffff" hasStroke="0" text="Blackaddr Audio MidiScripter 0.2.0"
+    <TEXT pos="28 20 180 30" fill="solid: ff00ffff" hasStroke="0" text="Blackaddr Audio MidiScripter"
           fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
-          justification="36"/>
+          justification="33"/>
     <TEXT pos="244 108 28 30" fill="solid: fff0ffff" hasStroke="0" text="Ch."
           fontname="Default font" fontsize="15" kerning="0" bold="0" italic="0"
           justification="36"/>
@@ -1216,11 +1291,11 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <TEXTEDITOR name="new text editor" id="a017ed130a1419c" memberName="textEditor"
-              virtualName="" explicitFocusOrder="0" pos="24 224 424 152" initialText=""
+              virtualName="" explicitFocusOrder="0" pos="18 251 424 152" initialText=""
               multiline="1" retKeyStartsLine="1" readonly="0" scrollbars="1"
               caret="1" popupmenu="1"/>
   <TEXTBUTTON name="add sequence" id="598515700d23c2c6" memberName="addSequence"
-              virtualName="" explicitFocusOrder="0" pos="24 176 64 24" bgColOff="ff00ffff"
+              virtualName="" explicitFocusOrder="0" pos="24 184 48 24" bgColOff="ff00ffff"
               textCol="ff000000" buttonText="NEW" connectedEdges="0" needsCallback="1"
               radioGroupId="0"/>
   <LABEL name="new label" id="467482ac978518d4" memberName="outputEvent2Ch"
@@ -1384,9 +1459,28 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <TEXTBUTTON name="delete sequence" id="d143991517e3ec9b" memberName="deleteSequence"
-              virtualName="" explicitFocusOrder="0" pos="104 176 64 24" bgColOff="ffff0000"
+              virtualName="" explicitFocusOrder="0" pos="165 184 53 24" bgColOff="ffff0000"
               textCol="ff000000" buttonText="DELETE" connectedEdges="0" needsCallback="1"
               radioGroupId="0"/>
+  <TOGGLEBUTTON name="printAllEventsEnable" id="254b18c237e10c7e" memberName="printAllEventsButton"
+                virtualName="" explicitFocusOrder="0" pos="24 216 152 24" buttonText="Print All CC Events"
+                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
+  <TOGGLEBUTTON name="printTriggeredEventsEnable" id="58342d6ae6624931" memberName="printTriggeredEventsButton"
+                virtualName="" explicitFocusOrder="0" pos="192 216 176 24" buttonText="Print Triggered Events"
+                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
+  <TEXTBUTTON name="copy sequence" id="841295fd7c7ab195" memberName="copySequence"
+              virtualName="" explicitFocusOrder="0" pos="95 184 48 24" bgColOff="ff00ffff"
+              textCol="ff000000" buttonText="COPY" connectedEdges="0" needsCallback="1"
+              radioGroupId="0"/>
+  <TEXTBUTTON name="clear text" id="4996d12d5698415a" memberName="clearText"
+              virtualName="" explicitFocusOrder="0" pos="388 214 48 24" bgColOff="ffffffff"
+              textCol="ff000000" buttonText="CLEAR" connectedEdges="0" needsCallback="1"
+              radioGroupId="0"/>
+  <LABEL name="version" id="ad6b8f428a552b7e" memberName="versionLabel"
+         virtualName="" explicitFocusOrder="0" pos="211 23 56 24" textCol="ff00ffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="X.X.X" editableSingleClick="1"
+         editableDoubleClick="1" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

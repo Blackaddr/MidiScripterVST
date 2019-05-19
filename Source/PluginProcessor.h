@@ -66,6 +66,7 @@ public:
     unsigned getSequenceSize() { return m_midiSequenceList->size(); }
     void addSequence();
     void removeSequence();
+    void copySelectedSequence();
     void setSelectedSequence(unsigned index) { m_selectedSequence = index; }
     unsigned getSelectedSequence() { return m_selectedSequence; }
     void loadFromStorage();
@@ -73,6 +74,9 @@ public:
     MidiEvent getEvent(int seq, int ev) { return m_midiSequenceList->at(seq).at(ev); }
 
     void setValidEditor(bool isValid) { m_hasValidEditor = isValid;  }
+
+    void setPrintAllCCEvents(bool printAllEvents)           { m_printAllCCEvents   = printAllEvents; }
+    void setPrintTriggeredEvents(bool printTriggeredEvents) { m_printTriggedEvents = printTriggeredEvents; }
     void writeLog(String str);
 
 private:
@@ -83,7 +87,8 @@ private:
     unsigned m_selectedSequence = 0;
     void setElementLocal(int seq, int ev, int word, int value);
     AudioProcessorEditor* m_editor = nullptr;
-    bool m_printAllCCEvents = true;
+    bool m_printAllCCEvents = false;
+    bool m_printTriggedEvents = false;
     std::ofstream logFile;
     
     bool m_hasValidEditor = false;

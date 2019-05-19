@@ -124,6 +124,11 @@ private:
     ScopedPointer<Label> outputEvent9Val;
     ScopedPointer<Label> label17;
     ScopedPointer<TextButton> deleteSequence;
+    ScopedPointer<ToggleButton> printAllEventsButton;
+    ScopedPointer<ToggleButton> printTriggeredEventsButton;
+    ScopedPointer<TextButton> copySequence;
+    ScopedPointer<TextButton> clearText;
+    ScopedPointer<Label> versionLabel;
 
 
     //==============================================================================
